@@ -1,0 +1,28 @@
+<div
+  class="flex grow h-full min-w-0 overflow-x-auto ![scrollbar-gutter:auto]"
+>
+
+  @for (column of columns(); track column.uuid) {
+    @if (column | isDeckColumnTimeline) {
+      <timeline-deck-column
+        [column]="column"
+        class="flex grow shrink-0 basis-md max-w-md not-first:border-l border-primary"
+      />
+    }
+    @else if (column | isDeckColumnNotification) {
+      <notification-deck-column
+        [column]="column"
+        class="flex grow shrink-0 basis-md max-w-md not-first:border-l border-primary"
+      />
+    }
+    @else if (column | isDeckColumnAuthor) {
+      <author-deck-column
+        [column]="column"
+        class="flex grow shrink-0 basis-md max-w-md not-first:border-l border-primary"
+      />
+    }
+  }
+  <div
+    class="flex-1 mt-[calc(2.25rem_-_1px)] border-t border-primary"
+  ></div>
+</div>

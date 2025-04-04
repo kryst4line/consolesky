@@ -1,0 +1,39 @@
+<div
+  #feed
+  class="w-full h-full min-h-0 flex flex-col margin-[0_auto] overflow-hidden hover:overflow-y-auto transition items-center"
+  vScroll
+  (scrollEnding)="nextData(); manageRefresh();"
+  (scrollTop)="manageRefresh();"
+>
+  @if (notifications) {
+    @for (notification of notifications; track notification.uuid) {
+      @if (notification | isPostNotification) {
+        <post-card
+          [post]="notification.post()"
+          (postChange)="notification.post.set($event)"
+          class="cursor-pointer hover:bg-primary/2 w-full"
+        />
+      } @else {
+        <notification-card
+          [notification]="notification"
+          (onClick)="openNotification($event)"
+          class="cursor-pointer hover:bg-primary/2 w-full"
+        />
+      }
+      <div
+        class="border-b border-b-primary/10 w-9/10"
+        style="mask-image: linear-gradient(to right, transparent, #000000 50%, transparent);"
+      ></div>
+    }
+<!--  } @else {-->
+<!--    <div-->
+<!--      class="h-full w-full flex items-center justify-center"-->
+<!--    >-->
+<!--      <p-progress-spinner-->
+<!--        class="h-12"-->
+<!--        strokeWidth="5"-->
+<!--        [style]="{height: '3rem', width: '3rem'}"-->
+<!--      />-->
+<!--    </div>-->
+  }
+</div>

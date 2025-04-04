@@ -1,0 +1,85 @@
+<div
+  class="flex w-full border-b border-primary box-border"
+>
+  <div
+    class="relative flex-1"
+  >
+    <div
+      #text autofocus
+      contenteditable="plaintext-only"
+      spellcheck="false"
+      class="absolute top-0 left-0 z-1 w-full h-full p-2 bg-transparent text-transparent outline-0 caret-black"
+      (input)="formatText($event)"
+      (paste)="postService.attachMedia($any($event.clipboardData.files))"
+      (keydown.control.enter)="postBtn.click()"
+      [mention]="mentionItems"
+      [mentionConfig]="{
+        triggerChar: '@',
+        labelKey: 'value',
+        disableSearch: true,
+        dropUp: true
+      }"
+      (searchTerm)="searchMentions($event)"
+    ></div>
+    <div
+      [innerHTML]="text.textContent.length ? formattedText : undefined"
+      class="w-full h-full p-2 bg-white text-black empty:text-primary/50 outline-0 break-words whitespace-pre-wrap empty:before:content-['user@consolesky:/$_\_']"
+    ></div>
+  </div>
+
+  <div
+    class="flex items-end shrink-0 p-[0.35rem]"
+  >
+    <button
+      class="btn-secondary h-22 w-22 flex flex-col justify-center items-center"
+    >
+      <div
+        class="flex items-center justify-center h-10"
+      >
+        <span
+          class="material-icons !text-6xl"
+        >format_quote</span>
+      </div>
+
+      Quote
+    </button>
+  </div>
+
+  <div
+    class="w-28 flex flex-col shrink-0 justify-end"
+  >
+    <div
+      class="flex h-fit w-full border-primary"
+      [class.border-t]="text | postComposerHeight"
+    >
+      <button
+        class="btn-secondary h-9 flex-1 border-r-0 border-t-0 p-0 flex items-center justify-center"
+      >
+        <span
+          class="material-icons-outlined"
+        >mode_comment</span>
+      </button>
+
+      <button
+        class="btn-secondary h-9 flex-1 border-r-0 border-t-0 p-0 flex items-center justify-center"
+      >
+        <span
+          class="material-icons-outlined"
+        >mode_comment</span>
+      </button>
+
+      <button
+        class="btn-secondary h-9 flex-1 border-r-0 border-t-0 p-0 flex items-center justify-center"
+      >
+        <span
+          class="material-icons-outlined"
+        >mode_comment</span>
+      </button>
+    </div>
+    <button
+      #postBtn
+      class="btn-primary h-16 w-full border-r-0 border-b-0"
+      (click)="publishPost()"
+    >Post</button>
+  </div>
+</div>

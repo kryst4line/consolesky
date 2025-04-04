@@ -1,0 +1,140 @@
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, input, model, OnDestroy, OnInit} from '@angular/core';
+import {AppBskyFeedDefs} from '@atproto/api';
+import {AvatarComponent} from '@components/shared/avatar/avatar.component';
+import {DisplayNamePipe} from '@shared/pipes/display-name.pipe';
+import {IsFeedPostRecordPipe} from '@shared/pipes/type-guards/is-feed-post-record';
+import {RichTextComponent} from '@components/shared/rich-text/rich-text.component';
+import {NgClass, NgTemplateOutlet} from '@angular/common';
+import {IsFeedDefsPostViewPipe} from '@shared/pipes/type-guards/is-feed-defs-postview';
+import {DateFormatterPipe} from '@shared/pipes/date-formatter.pipe';
+import {IsEmbedRecordViewPipe} from '@shared/pipes/type-guards/is-embed-record-view.pipe';
+import {RecordEmbedComponent} from '@components/embeds/record-embed/record-embed.component';
+import {IsFeedDefsReasonRepostPipe} from '@shared/pipes/type-guards/is-feed-defs-reasonrepost';
+import {IsEmbedImagesViewPipe} from '@shared/pipes/type-guards/is-embed-images-view.pipe';
+import {ImagesEmbedComponent} from '@components/embeds/images-embed/images-embed.component';
+import {LinkExtractorPipe} from '@shared/pipes/link-extractor.pipe';
+import {IsEmbedVideoViewPipe} from '@shared/pipes/type-guards/is-embed-video-view.pipe';
+import {VideoEmbedComponent} from '@components/embeds/video-embed/video-embed.component';
+import {IsEmbedRecordWithMediaViewPipe} from '@shared/pipes/type-guards/is-embed-recordwithmedia-view.pipe';
+import {NumberFormatterPipe} from '@shared/pipes/number-formatter.pipe';
+import {PostService} from '@services/post.service';
+import {OverlayModule} from '@angular/cdk/overlay';
+import {ExternalEmbedComponent} from '@components/embeds/external-embed/external-embed.component';
+import {IsEmbedExternalViewPipe} from '@shared/pipes/type-guards/is-embed-external-view.pipe';
+
+@Component({
+  selector: 'post-card',
+  imports: [
+    AvatarComponent,
+    DisplayNamePipe,
+    IsFeedPostRecordPipe,
+    RichTextComponent,
+    NgTemplateOutlet,
+    IsFeedDefsPostViewPipe,
+    DateFormatterPipe,
+    IsEmbedRecordViewPipe,
+    RecordEmbedComponent,
+    IsFeedDefsReasonRepostPipe,
+    IsEmbedImagesViewPipe,
+    ImagesEmbedComponent,
+    LinkExtractorPipe,
+    IsEmbedVideoViewPipe,
+    VideoEmbedComponent,
+    IsEmbedRecordWithMediaViewPipe,
+    NumberFormatterPipe,
+    OverlayModule,
+    NgClass,
+    ExternalEmbedComponent,
+    IsEmbedExternalViewPipe
+  ],
+  templateUrl: './post-card.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
+})
+export class PostCardComponent implements OnInit, OnDestroy {
+  post = model<AppBskyFeedDefs.PostView>();
+  reply = input<AppBskyFeedDefs.ReplyRef>();
+  reason = input<AppBskyFeedDefs.ReasonRepost | AppBskyFeedDefs.ReasonPin | { [k: string]: unknown; $type: string; }>();
+
+  refreshInterval: ReturnType<typeof setInterval>;
+  processingAction = false;
+  rtMenuVisible = false;
+
+  constructor(
+    private postService: PostService,
+    private cdRef: ChangeDetectorRef
+  ) {}
+
+  ngOnInit() {
+    this.refreshInterval = setInterval(() => this.cdRef.markForCheck(), 5e3);
+  }
+
+  ngOnDestroy() {
+    clearInterval(this.refreshInterval);
+  }
+
+  replyAction(event: Event) {
+    event.stopPropagation();
+    this.postService.replyPost(this.post().uri);
+  }
+
+  likeAction(event: Event) {
+    event.stopPropagation();
+    if (this.processingAction) return;
+    this.processingAction = true;
+    let promise: Promise<void>;
+
+    if (this.post().viewer.like) {
+      promise = this.postService.deleteLike(this.post);
+    } else {
+      promise = this.postService.like(this.post);
+    }
+
+    promise
+      .then(() => {
+        this.cdRef.markForCheck();
+      })
+      .catch(err => {
+        //TODO: MessageService
+      })
+      .finally(() => this.processingAction = false);
+  }
+
+  repostAction(event: Event) {
+    event.stopPropagation();
+    if (this.processingAction) return;
+    this.rtMenuVisible = false;
+    this.processingAction = true;
+    let promise: Promise<void>;
+
+    if (this.post().viewer.repost) {
+      promise = this.postService.deleteRepost(this.post);
+    } else {
+      promise = this.postService.repost(this.post);
+    }
+
+    promise
+      .then(() => {
+        this.cdRef.markForCheck();
+      })
+      .catch(err => {
+        //TODO: MessageService
+      })
+      .finally(() => this.processingAction = false);
+  }
+
+  refreshRepostAction(event: Event) {
+    event.stopPropagation();
+    if (this.processingAction) return;
+    this.rtMenuVisible = false;
+    this.processingAction = true;
+
+    this.postService.refreshRepost(this.post)
+      .then(() => {
+        this.cdRef.markForCheck();
+      })
+      .catch(err => {
+        //TODO: MessageService
+      })
+      .finally(() => this.processingAction = false);
+  }
+}

@@ -1,0 +1,11 @@
+@if (src()) {
+  <img
+    [src]="src()"
+    [alt]="alt()"
+    class="h-full w-full"
+  />
+} @else {
+  <div
+    class="h-full w-full bg-primary/50"
+  ></div>
+}

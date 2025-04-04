@@ -1,0 +1,191 @@
+@let postRecord = record();
+
+<div
+  class="flex"
+>
+  <div
+    class="overflow-hidden shrink-0 h-5 w-9 flex items-center justify-center"
+  >
+    <span class="material-icons !text-[2.25em]">format_quote</span>
+  </div>
+
+  <div
+    class="flex flex-col flex-1 min-w-0 mt-1"
+  >
+    @if (postRecord | isEmbedRecordViewRecord) {
+      <ng-container
+        [ngTemplateOutlet]="viewRecord"
+        [ngTemplateOutletContext]="{record: postRecord, media: postRecord.embeds ? postRecord.embeds[0] : undefined }"
+      />
+    }
+
+    @if (postRecord | isEmbedRecordViewBlocked) {
+      <span>
+        Post blocked
+      </span>
+    }
+
+    @if (postRecord | isEmbedRecordViewNotFound) {
+      <span>
+        Post not found
+      </span>
+    }
+
+    @if (postRecord | isEmbedRecordViewDetached) {
+      <span>
+        Post detached
+      </span>
+    }
+
+    @if (postRecord | isFeedDefsGeneratorView) {
+      <ng-container
+        [ngTemplateOutlet]="feed"
+        [ngTemplateOutletContext]="{feed: postRecord}"
+      />
+    }
+
+    @if (postRecord | isGraphDefsListView) {
+      <ng-container
+        [ngTemplateOutlet]="userList"
+        [ngTemplateOutletContext]="{list: postRecord}"
+      />
+    }
+
+    <!-- Apparently there's no actual support yet? -->
+    @if (postRecord | isLabelerDefsLabelerView) {
+      <span>
+        Labeler record
+      </span>
+    }
+
+    @if (postRecord | isGraphDefsStarterPackViewBasic) {
+      <ng-container
+        [ngTemplateOutlet]="starterPack"
+        [ngTemplateOutletContext]="{starterPack: postRecord}"
+      />
+    }
+  </div>
+</div>
+
+<ng-template
+  #viewRecord
+  let-record="record"
+  let-media="media"
+>
+  <span
+    class="font-bold [text-box:trim-both_cap_alphabetic] shrink-1 grow-0 min-w-0 overflow-y-visible overflow-x-clip overflow-ellipsis whitespace-nowrap"
+  >{{record.author | displayName}}</span>
+
+  @if ((record.value | isFeedPostRecord) && record.value.text.length) {
+    <rich-text
+      [text]="record.value.text"
+      class="mt-2"
+    />
+  }
+
+  @if (media) {
+    <ng-container
+      [ngTemplateOutlet]="mediaEmbeds"
+      [ngTemplateOutletContext]="{
+        media: media,
+        margin: (record.value | isFeedPostRecord) && record.value.text.length ? 'mt-2' : 'mt-3'
+      }"
+    />
+  }
+
+</ng-template>
+
+<ng-template
+  #mediaEmbeds
+  let-media="media"
+  let-margin="margin"
+>
+  @if (media | isEmbedImagesView) {
+    <images-embed
+      [images]="media.images"
+      [class]="margin"
+    />
+  }
+
+  @if (media | isEmbedVideoView) {
+    <video-embed
+      [embed]="media"
+      [class]="margin"
+    />
+  }
+
+  @if (media | isEmbedRecordWithMediaView) {
+    @if (media.media | isEmbedImagesView) {
+      <images-embed
+        [images]="media.media.images"
+        [class]="margin"
+      />
+    }
+
+    @if (media.media | isEmbedVideoView) {
+      <video-embed
+        [embed]="media.media"
+        [class]="margin"
+      />
+    }
+  }
+</ng-template>
+
+<ng-template
+  #feed
+  let-feed="feed"
+>
+  <span
+    class="text-bold overflow-hidden whitespace-nowrap text-ellipsis"
+  >{{feed.displayName}}</span>
+
+  <span
+    class="overflow-hidden whitespace-nowrap text-ellipsis"
+  >
+    @switch (feed.contentMode) {
+      @case (AppBskyFeedDefs.CONTENTMODEVIDEO) {
+        Video feed by {{ feed.creator | displayName }}
+      }
+      @default {
+        Feed by {{ feed.creator | displayName }}
+      }
+    }
+  </span>
+</ng-template>
+
+<ng-template
+  #userList
+  let-list="list"
+>
+  <span
+    class="text-bold overflow-hidden whitespace-nowrap text-ellipsis"
+  >{{list.name}}</span>
+
+  <span
+    class="overflow-hidden whitespace-nowrap text-ellipsis"
+  >
+    @switch (list.purpose) {
+      @case (AppBskyGraphDefs.MODLIST) {
+        Mute list by {{ list.creator | displayName }}
+      }
+      @default {
+        List by {{ list.creator | displayName }}
+      }
+    }
+  </span>
+</ng-template>
+
+<ng-template
+  #starterPack
+  let-starterpack="starterPack"
+>
+  <span
+    class="text-bold overflow-hidden whitespace-nowrap text-ellipsis"
+  >{{starterpack.record.name}}</span>
+
+  <span
+    class="overflow-hidden whitespace-nowrap text-ellipsis"
+  >
+    Starter pack by {{ starterpack.creator | displayName }}
+  </span>
+</ng-template>

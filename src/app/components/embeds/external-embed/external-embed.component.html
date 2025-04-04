@@ -1,0 +1,55 @@
+@if (snippet.type == LinkSnippetType) {
+  <a
+    [href]="external().uri"
+    target="_blank"
+    (click)="$event.stopPropagation()"
+    class="flex w-full bg-primary/2"
+  >
+    @if (external().thumb) {
+      <img
+        [ngSrc]="external().thumb"
+        alt="thumb"
+        width="1000"
+        height="1000"
+        class="h-16 w-16 object-cover"
+      />
+    }
+
+    <div
+      class="flex flex-col justify-center px-2 hover:bg-primary/2"
+    >
+      <span
+        class="font-semibold line-clamp-2 leading-[1.15]"
+      >{{ external().title }}</span>
+      <span
+        class="text-xs"
+      >{{ snippet.domain }}</span>
+    </div>
+  </a>
+}
+
+@if (snippet.type == BlueskyGifSnippetType) {
+  <video
+    #target
+    class="video-js vjs-show-big-play-button-on-pause rounded-md overflow-hidden"
+    (click)="$event.stopPropagation()"
+  ></video>
+}
+
+@if (snippet.type == IframeSnippetType) {
+  @if (snippet.source == YoutubeSnippetSource) {
+    <youtube-player
+      [videoId]="snippet.url"
+      class="aspect-video"
+      (click)="$event.stopPropagation()"
+    />
+  } @else {
+    <iframe
+      [src]="safeURL"
+      width="100%"
+      allow="fullscreen"
+      class="aspect-video"
+      (click)="$event.stopPropagation()"
+    ></iframe>
+  }
+}

@@ -13,7 +13,10 @@
         "build": {
           "builder": "@angular-devkit/build-angular:application",
           "options": {
-            "outputPath": "dist/consolesky",
+            "outputPath": {
+              "base": "docs",
+              "browser": ""
+            },
             "index": "src/index.html",
             "browser": "src/main.ts",
             "polyfills": [
@@ -27,7 +30,8 @@
               }
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "https://unpkg.com/video.js@8.22.0/dist/video-js.min.css"
             ],
             "scripts": []
           },
@@ -36,8 +40,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumWarning": "2MB",
+                  "maximumError": "5MB"
                 },
                 {
                   "type": "anyComponentStyle",
@@ -85,7 +89,8 @@
               }
             ],
             "styles": [
-              "src/styles.css"
+              "src/styles.css",
+              "https://unpkg.com/video.js@8.22.0/dist/video-js.min.css"
             ],
             "scripts": []
           }

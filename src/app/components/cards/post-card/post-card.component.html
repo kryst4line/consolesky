@@ -1,0 +1,296 @@
+<div
+  class="flex px-2 py-3 gap-2"
+>
+  <avatar
+    [src]="post().author.avatar"
+    class="h-12 w-12 shrink-0"
+  />
+  <div
+    class="flex flex-col w-full min-w-0"
+  >
+
+    <ng-container
+      [ngTemplateOutlet]="header"
+      [ngTemplateOutletContext]="{author: post().author, reply: reply(), record: post().record, reason: reason()}"
+    />
+
+    <ng-container
+      [ngTemplateOutlet]="subheader"
+      [ngTemplateOutletContext]="{reply: reply(), reason: reason()}"
+    />
+
+    <ng-container
+      [ngTemplateOutlet]="record"
+      [ngTemplateOutletContext]="{record: post().record}"
+    />
+
+    <ng-container
+      [ngTemplateOutlet]="embed"
+      [ngTemplateOutletContext]="{embed: post().embed}"
+    />
+
+    <ng-container
+      [ngTemplateOutlet]="info"
+    />
+  </div>
+</div>
+
+<ng-template
+  #header
+  let-author="author"
+  let-reply="reply"
+  let-record="record"
+  let-reason="reason"
+>
+  <div
+    class="flex mt-[0.15rem] w-full min-w-0"
+  >
+    <span
+      class="font-bold [text-box:trim-both_cap_alphabetic] mr-1 grow-0 shrink-1 min-w-0 overflow-y-visible overflow-x-clip overflow-ellipsis whitespace-nowrap"
+    >{{author | displayName}}</span>
+
+    @if (reason | isFeedDefsReasonRepost) {
+      <div
+        class="h-0"
+      >
+        <span
+          class="material-icons-outlined -translate-y-1 mr-1 text-repost"
+        >repeat</span>
+      </div>
+
+      <span
+        class="font-bold text-primary/50 [text-box:trim-both_cap_alphabetic] grow-1 shrink-0 max-w-1/2 min-w-0 overflow-y-visible overflow-x-clip overflow-ellipsis whitespace-nowrap"
+      >{{reason.by | displayName}}</span>
+    }
+
+<!--    @if (author.displayName?.length) {-->
+<!--      <span-->
+<!--        class="text-secondary [text-box:trim-both_cap_alphabetic] ml-2 shrink min-w-0 overflow-y-visible overflow-x-clip hidden whitespace-nowrap text-ellipsis"-->
+<!--      >{{'@' + author.handle}}</span>-->
+<!--    }-->
+
+    @if (record | isFeedPostRecord) {
+      <a
+        [href]="post().uri | linkExtractor: author.handle"
+        target="_blank"
+        class="text-sm text-primary/50 hover:underline [text-box:trim-both_cap_alphabetic] shrink-0 ml-auto pl-3"
+      >{{record.createdAt | dateFormatter}}</a>
+    }
+  </div>
+</ng-template>
+
+<ng-template
+  #subheader
+  let-reason="reason"
+  let-reply="reply"
+>
+  @if (reason || reply) {
+    <div
+      class="flex flex-col w-full"
+    >
+      @if (reply) {
+        <div
+          class="flex w-full min-w-0 mt-2.5"
+        >
+          <div
+            class="h-0"
+          >
+            <span
+              class="material-icons-outlined -translate-y-1.5 mr-1"
+            >subdirectory_arrow_right</span>
+          </div>
+
+          @if (reply.parent | isFeedDefsPostView) {
+            <span
+              class="font-bold text-primary/50 [text-box:trim-both_cap_alphabetic] shrink-0 grow basis-0 min-w-0 overflow-y-visible overflow-x-clip overflow-ellipsis whitespace-nowrap"
+            >{{reply.parent.author | displayName}}</span>
+          }
+        </div>
+      }
+    </div>
+  }
+</ng-template>
+
+<ng-template
+  #record
+  let-record="record"
+>
+  @if ((record | isFeedPostRecord) && record.text?.length) {
+    <rich-text
+      [text]="record.text"
+      [facets]="record.facets"
+      class="mt-2 text-sm"
+    />
+  }
+</ng-template>
+
+<ng-template
+  #embed
+  let-embed="embed"
+>
+  @if (embed | isEmbedRecordView) {
+    <record-embed
+      [record]="embed.record"
+      class="mt-2 p-2 hover:bg-primary/2"
+    />
+  }
+
+  @if (embed | isEmbedImagesView) {
+    <images-embed
+      [images]="embed.images"
+      class="mb-1"
+      [class]="$any(post().record).text.length ? 'mt-2' : 'mt-3'"
+    />
+  }
+
+  @if (embed | isEmbedVideoView) {
+    <video-embed
+      [embed]="embed"
+      [class]="$any(post().record).text.length ? 'mt-2' : 'mt-3'"
+    />
+  }
+
+  @if (embed | isEmbedExternalView) {
+    <external-embed
+      [external]="embed.external"
+      [class]="$any(post().record).text.length ? 'mt-2' : 'mt-3'"
+    />
+  }
+
+  @if (embed | isEmbedRecordWithMediaView) {
+    @if (embed.media | isEmbedImagesView) {
+      <images-embed
+        [images]="embed.media.images"
+        class="mb-1"
+        [class]="$any(post().record).text.length ? 'mt-2' : 'mt-3'"
+      />
+    }
+
+    @if (embed.media | isEmbedVideoView) {
+      <video-embed
+        [embed]="embed.media"
+        [class]="$any(post().record).text.length ? 'mt-2' : 'mt-3'"
+      />
+    }
+
+    @if (embed.media | isEmbedExternalView) {
+      <external-embed
+        [external]="embed.media.external"
+        [class]="$any(post().record).text.length ? 'mt-2' : 'mt-3'"
+      />
+    }
+
+    <record-embed
+      [record]="embed.record.record"
+      class="mt-2 p-2 hover:bg-primary/2"
+    />
+  }
+</ng-template>
+
+<ng-template
+  #info
+>
+  <div
+    class="flex mt-1 gap-4"
+  >
+    <div
+      class="w-16"
+    >
+      <button
+        class="flex w-fit h-7 p-2 items-center gap-1 hover:bg-primary/3 cursor-pointer"
+        (click)="replyAction($event)"
+      >
+        <span
+          class="material-icons-outlined !text-[14px]"
+        >mode_comment</span>
+
+        @if (post().replyCount) {
+          <span
+            class="[text-box:trim-both_cap_alphabetic]"
+          >{{post().replyCount | numberFormatter}}</span>
+        }
+      </button>
+    </div>
+
+    <div
+      class="w-16"
+    >
+      <button
+        cdkOverlayOrigin
+        #trigger="cdkOverlayOrigin"
+        class="flex w-fit h-7 p-2 items-center gap-1 border-t border-l border-r border-transparent hover:bg-primary/3 cursor-pointer"
+        [ngClass]="{'bg-primary/3 !border-primary' : rtMenuVisible}"
+        (click)="!processingAction ? rtMenuVisible = !rtMenuVisible : undefined"
+      >
+        <span
+          class="material-icons-outlined !text-[17px]"
+          [class]="post().viewer.repost ? 'text-repost' : undefined"
+        >repeat</span>
+
+        @if (post().repostCount) {
+          <span
+            class="[text-box:trim-both_cap_alphabetic]"
+          >{{post().repostCount | numberFormatter}}</span>
+        }
+      </button>
+
+      <ng-template
+        cdkConnectedOverlay
+        [cdkConnectedOverlayOrigin]="trigger"
+        [cdkConnectedOverlayOpen]="rtMenuVisible"
+        (detach)="rtMenuVisible = false"
+        (overlayOutsideClick)="rtMenuVisible = !rtMenuVisible"
+      >
+        <ul role="listbox" class="border border-primary">
+          <li>
+            <button
+              class="btn-dropdown"
+              (click)="repostAction($event)"
+            >
+              {{post().viewer.repost ? 'Undo Repost' : 'Repost'}}
+            </button>
+          </li>
+
+          @if (post().viewer.repost) {
+            <li>
+              <button
+                class="btn-dropdown"
+                (click)="refreshRepostAction($event)"
+              >
+                Repost again
+              </button>
+            </li>
+          }
+
+          <li>
+            <button
+              class="btn-dropdown"
+            >
+              Quote post
+            </button>
+          </li>
+        </ul>
+      </ng-template>
+    </div>
+
+    <div
+      class="w-16"
+    >
+      <button
+        class="flex w-fit h-7 p-2 items-center gap-1 hover:bg-primary/3 cursor-pointer"
+        (click)="likeAction($event)"
+      >
+        <span
+          class="material-icons-outlined transition"
+          [class]="post().viewer.like ? 'text-like' : undefined"
+        >{{post().viewer.like ? 'favorite' : 'favorite_border'}}</span>
+
+        @if (post().likeCount) {
+          <span
+            class="[text-box:trim-both_cap_alphabetic]"
+          >{{post().likeCount | numberFormatter}}</span>
+        }
+      </button>
+    </div>
+  </div>
+</ng-template>

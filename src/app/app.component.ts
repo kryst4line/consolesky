@@ -1,5 +1,7 @@
-import { Component } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import {Component} from '@angular/core';
+import {Router, RouterOutlet} from '@angular/router';
+import {AuthService} from '@core/auth/auth.service';
+import {takeWhile} from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -8,5 +10,20 @@ import { RouterOutlet } from '@angular/router';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'consolesky';
+  constructor(
+    private authService: AuthService,
+    private router: Router
+  ) {
+    this.initApp();
+  }
+
+  initApp() {
+    this.authService.authenticationState.pipe(takeWhile(res => !res, true)).subscribe(state => {
+      if (state) {
+        this.router.navigate(['']);
+      } else {
+        this.router.navigate(['login']);
+      }
+    });
+  }
 }
