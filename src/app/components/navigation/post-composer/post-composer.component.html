@@ -1,85 +1,226 @@
+@let mediaEmbed = postService.postCompose().mediaEmbed();
+@let recordEmbed = postService.postCompose().recordEmbed();
+@let reply = postService.postCompose().reply();
+@let suggestion = embedSuggestions().length ? (embedSuggestions() | slice : 0 : 1)[0] : undefined;
+
 <div
-  class="flex w-full border-b border-primary box-border"
+  class="flex relative flex-col w-full border-b border-primary"
 >
-  <div
-    class="relative flex-1"
-  >
+  @if (showDragOver()) {
     <div
-      #text autofocus
-      contenteditable="plaintext-only"
-      spellcheck="false"
-      class="absolute top-0 left-0 z-1 w-full h-full p-2 bg-transparent text-transparent outline-0 caret-black"
-      (input)="formatText($event)"
-      (paste)="postService.attachMedia($any($event.clipboardData.files))"
-      (keydown.control.enter)="postBtn.click()"
-      [mention]="mentionItems"
-      [mentionConfig]="{
-        triggerChar: '@',
-        labelKey: 'value',
-        disableSearch: true,
-        dropUp: true
-      }"
-      (searchTerm)="searchMentions($event)"
-    ></div>
+      class="absolute top-0 left-0 flex items-center justify-center w-full h-full bg-primary/5 z-1 backdrop-blur-[1px]"
+    >
+      <span
+        class="text-xl underline text-primary/70"
+      >Drop here</span>
+    </div>
+  }
+
+  @if (reply) {
     <div
-      [innerHTML]="text.textContent.length ? formattedText : undefined"
-      class="w-full h-full p-2 bg-white text-black empty:text-primary/50 outline-0 break-words whitespace-pre-wrap empty:before:content-['user@consolesky:/$_\_']"
-    ></div>
-  </div>
+      class="relative w-full h-7 flex items-center px-2 bg-primary text-bg font-semibold cursor-default"
+    >
+      <span
+      >Replying to</span>
+
+      <span
+        class="ml-2"
+      >{{reply.author | displayName}}</span>
+
+      <span
+        class="ml-auto font-semibold cursor-pointer hover:underline"
+        (click)="showReply.set(!showReply())"
+      >{{ showReply() ? 'hide post' : 'view post' }}</span>
+
+      <span
+        class="ml-6 font-semibold cursor-pointer hover:underline"
+        (click)="showReply.set(false); postService.postCompose().reply.set(undefined)"
+      >cancel</span>
+
+      @if (showReply()) {
+        <div
+          class="absolute bg-bg border border-primary bottom-7 right-[-1px]"
+        >
+          <post-card
+            [post]="reply"
+            class="block  w-[30rem] text-primary font-normal"
+          />
+        </div>
+      }
+    </div>
+  }
 
   <div
-    class="flex items-end shrink-0 p-[0.35rem]"
+    class="flex w-full"
   >
-    <button
-      class="btn-secondary h-22 w-22 flex flex-col justify-center items-center"
+    <div
+      class="flex-1 min-w-0"
+      [class.relative]="!showDragOver()"
     >
       <div
-        class="flex items-center justify-center h-10"
+        #text autofocus
+        contenteditable="plaintext-only"
+        spellcheck="false"
+        class="absolute top-0 left-0 z-1 w-full h-full p-2 bg-transparent text-transparent outline-0 caret-black"
+        (input)="formatText($event)"
+        (paste)="postService.attachMedia($any($event.clipboardData.files))"
+        (keydown.control.enter)="postBtn.click()"
+        [mention]="mentionItems"
+        [mentionConfig]="{
+          triggerChar: '@',
+          labelKey: 'value',
+          disableSearch: true,
+          dropUp: true
+        }"
+        (searchTerm)="searchMentions($event)"
+      ></div>
+      <div
+        [innerHTML]="text.textContent.length ? formattedText : undefined"
+        class="w-full h-full p-2 bg-white text-black empty:text-primary/50 outline-0 break-words whitespace-pre-wrap empty:before:content-['user@consolesky:/$_\_']"
+      ></div>
+
+
+      <div
+        class="relative w-full"
       >
         <span
-          class="material-icons !text-6xl"
-        >format_quote</span>
+          class="absolute bottom-1 right-2 text-primary/50"
+          [class.text-repost]="(300 - text.textContent.length) > 50"
+        >{{300 - text.textContent.length}}</span>
+      </div>
+    </div>
+
+    <div
+      class="flex items-end shrink-0 p-[0.35rem] empty:hidden"
+    >
+
+      @if (mediaEmbed) {
+        <button
+          class="btn-secondary h-22 w-22 flex flex-col justify-center items-center"
+        >
+          <div
+            class="flex items-center justify-center h-10"
+          >
+            <span
+              class="material-icons !text-5xl -translate-y-0.5"
+            >attachment</span>
+          </div>
+
+          @if (mediaEmbed | isMediaEmbedImage) {
+            images
+          }
+          @else if (mediaEmbed | isMediaEmbedVideo) {
+            video
+          }
+          @else if (mediaEmbed | isMediaEmbedExternal) {
+            link
+          }
+        </button>
+      } @else if (suggestion | isMediaEmbedExternal) {
+        <button
+          class="btn-secondary h-22 w-22 flex flex-col justify-center items-center border-dashed"
+          (click)="embedLink()"
+        >
+          <div
+            class="flex items-center justify-center h-8"
+          >
+            <span
+              class="material-icons !text-5xl"
+            >attachment</span>
+          </div>
+
+          add link?
+        </button>
+      }
+
+      @if (recordEmbed) {
+        <button
+          class="btn-secondary h-22 w-22 ml-2 flex flex-col justify-center items-center"
+        >
+          <div
+            class="flex items-center justify-center h-10"
+          >
+            <span
+              class="material-icons !text-6xl"
+            >format_quote</span>
+          </div>
+
+          quote
+        </button>
+      } @else if (suggestion | isRecordEmbed) {
+        <button
+          class="btn-secondary h-22 w-22 flex flex-col justify-center items-center border-dashed"
+          (click)="embedRecord()"
+        >
+          <div
+            class="flex items-center justify-center h-10"
+          >
+            <span
+              class="material-icons !text-6xl"
+            >format_quote</span>
+          </div>
+
+          add quote?
+        </button>
+      }
+    </div>
+
+    <div
+      class="w-28 flex flex-col shrink-0 justify-end"
+    >
+      <div
+        class="flex h-fit w-full border-primary border-l border-b"
+        [class.border-t]="text | postComposerHeight"
+      >
+        <button
+          class="btn-secondary h-9 flex-1 border-0 p-0 flex items-center justify-center"
+          (click)="uploader.click()"
+        >
+          <span
+            class="material-icons-outlined !text-xl"
+          >image</span>
+
+          <input
+            #uploader
+            type="file"
+            class="hidden"
+            (change)="postService.attachMedia($any(uploader.files))"
+          />
+        </button>
+
+        <div
+          class="h-full border-l border-primary"
+        ></div>
+
+        <button
+          disabled
+          class="btn-secondary h-9 flex-1 border-0 p-0 flex items-center justify-center"
+        >
+          <span
+            class="material-icons-outlined !text-xl"
+          >sentiment_satisfied_alt</span>
+        </button>
+
+        <div
+          class="h-full border-l border-primary"
+        ></div>
+
+        <button
+          disabled
+          class="btn-secondary h-9 flex-1 border-0 p-0 flex items-center justify-center"
+        >
+          <span
+            class="material-icons-outlined !text-[2em]"
+          >gif</span>
+        </button>
       </div>
 
-      Quote
-    </button>
-  </div>
-
-  <div
-    class="w-28 flex flex-col shrink-0 justify-end"
-  >
-    <div
-      class="flex h-fit w-full border-primary"
-      [class.border-t]="text | postComposerHeight"
-    >
       <button
-        class="btn-secondary h-9 flex-1 border-r-0 border-t-0 p-0 flex items-center justify-center"
-      >
-        <span
-          class="material-icons-outlined"
-        >mode_comment</span>
-      </button>
-
-      <button
-        class="btn-secondary h-9 flex-1 border-r-0 border-t-0 p-0 flex items-center justify-center"
-      >
-        <span
-          class="material-icons-outlined"
-        >mode_comment</span>
-      </button>
-
-      <button
-        class="btn-secondary h-9 flex-1 border-r-0 border-t-0 p-0 flex items-center justify-center"
-      >
-        <span
-          class="material-icons-outlined"
-        >mode_comment</span>
-      </button>
+        #postBtn
+        class="btn-primary font-semibold h-16 w-full border-0 border-l"
+        [disabled]="loading || text.innerText.length > 300 || (!text.innerText.length && !mediaEmbed && !recordEmbed)"
+        (click)="publishPost()"
+      >post</button>
     </div>
-    <button
-      #postBtn
-      class="btn-primary h-16 w-full border-r-0 border-b-0"
-      (click)="publishPost()"
-    >Post</button>
   </div>
 </div>

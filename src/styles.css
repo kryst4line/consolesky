@@ -192,7 +192,8 @@ html, body, .app-container {
 @layer components {
   .btn-primary {
     box-sizing: border-box;
-    border: 1px solid var(--color-primary);
+    border: 1px solid;
+    border-color: var(--color-primary);
     background-color: var(--color-primary);
     color: var(--color-bg);
     width: fit-content;
@@ -205,11 +206,17 @@ html, body, .app-container {
       background-color: var(--color-bg);
       color: var(--color-primary);
     }
+
+    &:disabled {
+      pointer-events: none;
+      opacity: 0.3;
+    }
   }
 
   .btn-secondary {
     box-sizing: border-box;
-    border: 1px solid var(--color-primary);
+    border: 1px solid;
+    border-color: var(--color-primary);
     background-color: var(--color-bg);
     color: var(--color-primary);
     width: fit-content;
@@ -219,8 +226,13 @@ html, body, .app-container {
     min-height: 2em;
 
     &:hover {
-      background-color: color-mix(in oklab, var(--color-primary) /* #000 = #000000 */ 15%, transparent);
+      background-color: color-mix(in oklab, var(--color-primary) /* #000 = #000000 */ 10%, transparent);
       color: var(--color-primary);
+    }
+
+    &:disabled {
+      pointer-events: none;
+      opacity: 0.3;
     }
   }
 
@@ -238,6 +250,10 @@ html, body, .app-container {
     &:hover {
       background-color: var(--color-primary);
       color: var(--color-bg);
+    }
+
+    &:disabled {
+      pointer-events: none;
     }
   }
 }

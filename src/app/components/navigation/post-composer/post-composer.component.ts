@@ -1,6 +1,13 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, signal, WritableSignal} from '@angular/core';
+import {
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component, ElementRef,
+  HostListener,
+  signal,
+  WritableSignal
+} from '@angular/core';
 import {$Typed, AppBskyFeedDefs, AppBskyGraphDefs, RichText} from '@atproto/api';
-import {ExternalEmbed, ImageEmbed, RecordEmbed} from '@models/embed';
+import {ExternalEmbed, ImageEmbed, RecordEmbed, RecordEmbedType} from '@models/embed';
 import {EmbedUtils} from '@shared/utils/embed-utils';
 import {PostService} from '@services/post.service';
 import {EmbedService} from '@services/embed.service';
@@ -10,12 +17,26 @@ import {SnippetType} from '@models/snippet';
 import {SnippetUtils} from '@shared/utils/snippet-utils';
 import {MentionModule} from 'angular-mentions';
 import {PostComposerHeightPipe} from '@shared/pipes/post-composer-height.pipe';
+import {DisplayNamePipe} from '@shared/pipes/display-name.pipe';
+import {PostCardComponent} from '@components/cards/post-card/post-card.component';
+import {IsMediaEmbedImagePipe} from '@shared/pipes/type-guards/is-media-embed-image';
+import {IsMediaEmbedVideoPipe} from '@shared/pipes/type-guards/is-media-embed-video';
+import {IsMediaEmbedExternalPipe} from '@shared/pipes/type-guards/is-media-embed-external';
+import {SlicePipe} from '@angular/common';
+import {IsRecordEmbedPipe} from '@shared/pipes/type-guards/is-record-embed';
 
 @Component({
   selector: 'post-composer',
   imports: [
     MentionModule,
-    PostComposerHeightPipe
+    PostComposerHeightPipe,
+    DisplayNamePipe,
+    PostCardComponent,
+    IsMediaEmbedImagePipe,
+    IsMediaEmbedVideoPipe,
+    IsMediaEmbedExternalPipe,
+    SlicePipe,
+    IsRecordEmbedPipe
   ],
   templateUrl: './post-composer.component.html',
   styles: `
@@ -46,10 +67,15 @@ export class PostComposerComponent {
   mentionItems = [];
   loading = false;
   embedSuggestions = signal<Array<RecordEmbed | ExternalEmbed>>([]);
+  showReply = signal(false);
+  showMedia = signal(false);
+  showRecord = signal(false);
+  showDragOver = signal(false);
 
   constructor(
     protected postService: PostService,
     private embedService: EmbedService,
+    private elementRef: ElementRef,
     private cdRef: ChangeDetectorRef
   ) {}
 
@@ -124,6 +150,24 @@ export class PostComposerComponent {
     }
   }
 
+  embedRecord() {
+    const embed = this.embedSuggestions()[0] as RecordEmbed;
+    switch (embed.recordType) {
+      case RecordEmbedType.POST:
+        this.embedQuote();
+        break;
+      case RecordEmbedType.FEED:
+        this.embedFeed();
+        break;
+      case RecordEmbedType.LIST:
+        this.embedList();
+        break;
+      case RecordEmbedType.STARTER_PACK:
+        this.embedStarterPack();
+        break;
+    }
+  }
+
   embedQuote() {
     const embed = this.embedSuggestions()[0] as RecordEmbed;
     agent.resolveHandle({
@@ -186,5 +230,31 @@ export class PostComposerComponent {
       //TODO: MessageService
       err => console.log(err.message)
     ).finally(() => this.loading = false);
+  }
+
+  @HostListener('dragenter', ['$event'])
+  onDragEnter(event: Event) {
+    event.preventDefault();
+
+    if (this.elementRef.nativeElement.contains((event as any).currentTarget)) {
+      this.showDragOver.set(true);
+    }
+  }
+
+  @HostListener('dragleave', ['$event'])
+  onDragLeave(event: Event) {
+    event.preventDefault();
+
+    if (!this.elementRef.nativeElement.contains((event as any).relatedTarget)) {
+      this.showDragOver.set(false);
+    }
+  }
+
+  @HostListener('drop', ['$event'])
+  onDrop(event: Event) {
+    event.preventDefault();
+
+    this.showDragOver.set(false);
+    this.postService.attachMedia((event as any).dataTransfer.files);
   }
 }
