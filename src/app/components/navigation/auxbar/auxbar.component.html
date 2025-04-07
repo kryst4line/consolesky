@@ -11,6 +11,16 @@
   <div
     class="flex flex-col flex-1 border-l border-primary"
   >
+    <span
+      class="text-lg font-bold ml-3"
+    >
+      > trending topics
+    </span>
 
+    @for (topic of topics(); track topic.topic) {
+      <span
+        class="ml-3 mt-1"
+      >{{topic.topic}}</span>
+    }
   </div>
 </div>
