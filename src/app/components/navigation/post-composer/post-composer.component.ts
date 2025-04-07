@@ -1,7 +1,8 @@
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  Component, ElementRef,
+  Component,
+  ElementRef,
   HostListener,
   signal,
   WritableSignal
@@ -22,8 +23,14 @@ import {PostCardComponent} from '@components/cards/post-card/post-card.component
 import {IsMediaEmbedImagePipe} from '@shared/pipes/type-guards/is-media-embed-image';
 import {IsMediaEmbedVideoPipe} from '@shared/pipes/type-guards/is-media-embed-video';
 import {IsMediaEmbedExternalPipe} from '@shared/pipes/type-guards/is-media-embed-external';
-import {SlicePipe} from '@angular/common';
+import {NgTemplateOutlet, SlicePipe} from '@angular/common';
 import {IsRecordEmbedPipe} from '@shared/pipes/type-guards/is-record-embed';
+import {IsEmbedRecordViewRecordPipe} from '@shared/pipes/type-guards/is-embed-record-viewrecord.pipe';
+import {RecordEmbedComponent} from '@components/embeds/record-embed/record-embed.component';
+import {IsFeedDefsGeneratorViewPipe} from '@shared/pipes/type-guards/is-feed-defs-generator-view';
+import {IsGraphDefsListViewPipe} from '@shared/pipes/type-guards/is-graph-defs-list-view';
+import {IsGraphDefsStarterPackViewPipe} from '@shared/pipes/type-guards/is-graph-defs-starterpack-view';
+import {ExternalEmbedComponent} from '@components/embeds/external-embed/external-embed.component';
 
 @Component({
   selector: 'post-composer',
@@ -36,7 +43,14 @@ import {IsRecordEmbedPipe} from '@shared/pipes/type-guards/is-record-embed';
     IsMediaEmbedVideoPipe,
     IsMediaEmbedExternalPipe,
     SlicePipe,
-    IsRecordEmbedPipe
+    IsRecordEmbedPipe,
+    NgTemplateOutlet,
+    IsEmbedRecordViewRecordPipe,
+    RecordEmbedComponent,
+    IsFeedDefsGeneratorViewPipe,
+    IsGraphDefsListViewPipe,
+    IsGraphDefsStarterPackViewPipe,
+    ExternalEmbedComponent
   ],
   templateUrl: './post-composer.component.html',
   styles: `
@@ -67,10 +81,8 @@ export class PostComposerComponent {
   mentionItems = [];
   loading = false;
   embedSuggestions = signal<Array<RecordEmbed | ExternalEmbed>>([]);
-  showReply = signal(false);
-  showMedia = signal(false);
-  showRecord = signal(false);
   showDragOver = signal(false);
+  showPopup = signal<'reply' | 'media' | 'record'>(undefined);
 
   constructor(
     protected postService: PostService,
@@ -126,6 +138,7 @@ export class PostComposerComponent {
 
     if (imageEmbed().images.length == 1) {
       imageEmbed.set(undefined);
+      if (this.showPopup() == 'media') this.showPopup.set(undefined);
     } else {
       imageEmbed.update(embed => {
         embed.images.splice(index, 1);
@@ -136,6 +149,10 @@ export class PostComposerComponent {
 
   embedLink() {
     const embed = this.embedSuggestions()[0] as ExternalEmbed;
+    if (!embed.url.startsWith('https://') && !embed.url.startsWith('http://')) {
+      embed.url = 'https://' + embed.url;
+    }
+
     embed.snippet = SnippetUtils.detectSnippet({uri: embed.url, description: ''});
 
     if (embed.snippet.type !== SnippetType.BLUESKY_GIF) {
@@ -143,6 +160,7 @@ export class PostComposerComponent {
         next: metadata => {
           embed.metadata = metadata;
           this.postService.postCompose().mediaEmbed.set(embed);
+          console.log(embed)
         },
         //TODO: MessageService
         error: err => console.log(err.message)

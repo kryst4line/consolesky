@@ -225,6 +225,11 @@ html, body, .app-container {
     cursor: pointer;
     min-height: 2em;
 
+    &.active {
+      background-color: color-mix(in oklab, var(--color-primary) /* #000 = #000000 */ 5%, transparent);
+      color: var(--color-primary);
+    }
+
     &:hover {
       background-color: color-mix(in oklab, var(--color-primary) /* #000 = #000000 */ 10%, transparent);
       color: var(--color-primary);

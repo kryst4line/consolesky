@@ -6,13 +6,23 @@
 <div
   class="flex relative flex-col w-full border-b border-primary"
 >
+  @if (showPopup()) {
+    <div
+      class="relative w-full"
+    >
+      <ng-container
+        [ngTemplateOutlet]="mediaPopup"
+      ></ng-container>
+    </div>
+  }
+
   @if (showDragOver()) {
     <div
       class="absolute top-0 left-0 flex items-center justify-center w-full h-full bg-primary/5 z-1 backdrop-blur-[1px]"
     >
       <span
         class="text-xl underline text-primary/70"
-      >Drop here</span>
+      >drop here</span>
     </div>
   }
 
@@ -21,7 +31,7 @@
       class="relative w-full h-7 flex items-center px-2 bg-primary text-bg font-semibold cursor-default"
     >
       <span
-      >Replying to</span>
+      >replying to</span>
 
       <span
         class="ml-2"
@@ -29,24 +39,13 @@
 
       <span
         class="ml-auto font-semibold cursor-pointer hover:underline"
-        (click)="showReply.set(!showReply())"
-      >{{ showReply() ? 'hide post' : 'view post' }}</span>
+        (click)="showPopup() !== 'reply' ? showPopup.set('reply') : showPopup.set(undefined)"
+      >{{ showPopup() == 'reply' ? 'hide post' : 'view post' }}</span>
 
       <span
         class="ml-6 font-semibold cursor-pointer hover:underline"
-        (click)="showReply.set(false); postService.postCompose().reply.set(undefined)"
+        (click)="showPopup() == 'reply' ? showPopup.set(undefined) : undefined; postService.postCompose().reply.set(undefined)"
       >cancel</span>
-
-      @if (showReply()) {
-        <div
-          class="absolute bg-bg border border-primary bottom-7 right-[-1px]"
-        >
-          <post-card
-            [post]="reply"
-            class="block  w-[30rem] text-primary font-normal"
-          />
-        </div>
-      }
     </div>
   }
 
@@ -85,7 +84,7 @@
       >
         <span
           class="absolute bottom-1 right-2 text-primary/50"
-          [class.text-repost]="(300 - text.textContent.length) > 50"
+          [class.!text-like]="(300 - text.textContent.length) < 0"
         >{{300 - text.textContent.length}}</span>
       </div>
     </div>
@@ -97,6 +96,8 @@
       @if (mediaEmbed) {
         <button
           class="btn-secondary h-22 w-22 flex flex-col justify-center items-center"
+          [class.active]="showPopup() == 'media'"
+          (click)="showPopup() !== 'media' ? showPopup.set('media') : showPopup.set(undefined)"
         >
           <div
             class="flex items-center justify-center h-10"
@@ -136,6 +137,8 @@
       @if (recordEmbed) {
         <button
           class="btn-secondary h-22 w-22 ml-2 flex flex-col justify-center items-center"
+          [class.active]="showPopup() == 'record'"
+          (click)="showPopup() !== 'record' ? showPopup.set('record') : showPopup.set(undefined)"
         >
           <div
             class="flex items-center justify-center h-10"
@@ -224,3 +227,137 @@
     </div>
   </div>
 </div>
+
+<ng-template
+  #mediaPopup
+>
+  <div
+    class="absolute min-w-[25rem] flex flex-col bg-bg border border-primary bottom-0 right-[-1px]"
+  >
+    @switch (showPopup()) {
+      @case ('reply') {
+        <post-card
+          [post]="reply"
+          hideButtons
+          class="block w-[30rem] text-primary font-normal p-2"
+        />
+      }
+      @case ('media') {
+        @if (mediaEmbed | isMediaEmbedImage) {
+          <div
+            class="flex p-2 gap-2 justify-end"
+          >
+            @for (image of mediaEmbed.images; track $index) {
+              <div
+                class="flex flex-col"
+              >
+                <img
+                  [src]="image.data"
+                  [alt]="image.alt"
+                  class="h-20 w-20 object-cover"
+                />
+                <div
+                  class="flex justify-between mt-0.5 px-1"
+                >
+                  <span
+                    class="cursor-pointer hover:underline"
+                    [class.font-bold]="image.alt"
+                  >alt</span>
+                  <span
+                    class="cursor-pointer font-bold hover:underline"
+                    (click)="removeImage($index)"
+                  >X</span>
+                </div>
+              </div>
+            }
+          </div>
+        }
+
+        @if (mediaEmbed | isMediaEmbedExternal) {
+          <div
+            class="w-[30rem] p-3"
+          >
+            <external-embed
+              [external]="{
+                $type: 'app.bsky.embed.external#viewExternal',
+                uri: mediaEmbed.url,
+                title: mediaEmbed.metadata.title,
+                thumb: mediaEmbed.metadata.imageUrl,
+                description: mediaEmbed.metadata.description,
+              }"
+              class="block h-16"
+            />
+          </div>
+        }
+      }
+      @case ('record') {
+        <record-embed
+          [record]="recordEmbed"
+          class="block w-[30rem] p-3"
+        />
+      }
+    }
+    <div
+      class="w-full h-7 flex items-center px-2 bg-primary text-bg font-semibold cursor-default"
+    >
+        @switch (showPopup()) {
+          @case ('reply') {
+            <span>showing reply</span>
+          }
+          @case ('media') {
+            @if (mediaEmbed | isMediaEmbedImage) {
+              <span>embedding images</span>
+              <span
+                class="ml-auto hover:underline cursor-pointer"
+                (click)="showPopup.set(undefined); postService.postCompose().mediaEmbed.set(undefined)"
+              >remove all</span>
+            }
+            @if (mediaEmbed | isMediaEmbedVideo) {
+              <span>embedding video</span>
+              <span
+                class="ml-auto hover:underline cursor-pointer"
+                (click)="showPopup.set(undefined); postService.postCompose().mediaEmbed.set(undefined)"
+              >remove</span>
+            }
+            @if (mediaEmbed | isMediaEmbedExternal) {
+              <span>embedding link</span>
+              <span
+                class="ml-auto hover:underline cursor-pointer"
+                (click)="showPopup.set(undefined); postService.postCompose().mediaEmbed.set(undefined)"
+              >remove</span>
+            }
+          }
+          @case ('record') {
+            @if (recordEmbed | isEmbedRecordViewRecord) {
+              <span>quoting post</span>
+              <span
+                class="ml-auto hover:underline cursor-pointer"
+                (click)="showPopup.set(undefined); postService.postCompose().recordEmbed.set(undefined)"
+              >remove</span>
+            }
+            @if (recordEmbed | isFeedDefsGeneratorView) {
+              <span>quoting feed</span>
+              <span
+                class="ml-auto hover:underline cursor-pointer"
+                (click)="showPopup.set(undefined); postService.postCompose().recordEmbed.set(undefined)"
+              >remove</span>
+            }
+            @if (recordEmbed | isGraphDefsListView) {
+              <span>quoting list</span>
+              <span
+                class="ml-auto hover:underline cursor-pointer"
+                (click)="showPopup.set(undefined); postService.postCompose().recordEmbed.set(undefined)"
+              >remove</span>
+            }
+            @if (recordEmbed | isGraphDefsStarterPackView) {
+              <span>quoting starter pack</span>
+              <span
+                class="ml-auto hover:underline cursor-pointer"
+                (click)="showPopup.set(undefined); postService.postCompose().recordEmbed.set(undefined)"
+              >remove</span>
+            }
+          }
+        }
+    </div>
+  </div>
+</ng-template>

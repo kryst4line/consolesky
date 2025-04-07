@@ -11,13 +11,13 @@
         <post-card
           [post]="notification.post()"
           (postChange)="notification.post.set($event)"
-          class="cursor-pointer hover:bg-primary/2 w-full"
+          class="cursor-pointer hover:bg-primary/2 w-full py-3 px-2"
         />
       } @else {
         <notification-card
           [notification]="notification"
           (onClick)="openNotification($event)"
-          class="cursor-pointer hover:bg-primary/2 w-full"
+          class="cursor-pointer hover:bg-primary/2 w-full py-3 px-2"
         />
       }
       <div

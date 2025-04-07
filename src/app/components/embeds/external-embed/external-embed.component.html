@@ -11,12 +11,24 @@
         alt="thumb"
         width="1000"
         height="1000"
-        class="h-16 w-16 object-cover"
+        class="h-16 w-16 shrink-0 object-cover"
       />
+    } @else {
+      <div
+        class="h-16 w-16 flex items-center justify-center shrink-0 bg-primary/10"
+      >
+        <div
+          class="flex items-center justify-center h-10"
+        >
+            <span
+              class="material-icons !text-5xl"
+            >link</span>
+        </div>
+      </div>
     }
 
     <div
-      class="flex flex-col justify-center px-2 hover:bg-primary/2"
+      class="flex flex-col grow justify-evenly px-2 hover:bg-primary/2"
     >
       <span
         class="font-semibold line-clamp-2 leading-[1.15]"

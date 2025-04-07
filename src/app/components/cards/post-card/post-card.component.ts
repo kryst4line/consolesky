@@ -1,4 +1,14 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, input, model, OnDestroy, OnInit} from '@angular/core';
+import {
+  booleanAttribute,
+  ChangeDetectionStrategy,
+  ChangeDetectorRef,
+  Component,
+  effect,
+  input,
+  model,
+  OnDestroy,
+  OnInit
+} from '@angular/core';
 import {AppBskyFeedDefs} from '@atproto/api';
 import {AvatarComponent} from '@components/shared/avatar/avatar.component';
 import {DisplayNamePipe} from '@shared/pipes/display-name.pipe';
@@ -54,6 +64,7 @@ export class PostCardComponent implements OnInit, OnDestroy {
   post = model<AppBskyFeedDefs.PostView>();
   reply = input<AppBskyFeedDefs.ReplyRef>();
   reason = input<AppBskyFeedDefs.ReasonRepost | AppBskyFeedDefs.ReasonPin | { [k: string]: unknown; $type: string; }>();
+  hideButtons = input(false, {transform: booleanAttribute});
 
   refreshInterval: ReturnType<typeof setInterval>;
   processingAction = false;
@@ -62,7 +73,11 @@ export class PostCardComponent implements OnInit, OnDestroy {
   constructor(
     private postService: PostService,
     private cdRef: ChangeDetectorRef
-  ) {}
+  ) {
+    effect(() => {
+      if (this.post()) cdRef.markForCheck()
+    })
+  }
 
   ngOnInit() {
     this.refreshInterval = setInterval(() => this.cdRef.markForCheck(), 5e3);
@@ -95,6 +110,7 @@ export class PostCardComponent implements OnInit, OnDestroy {
       })
       .catch(err => {
         //TODO: MessageService
+        console.log(err.message);
       })
       .finally(() => this.processingAction = false);
   }
@@ -118,6 +134,7 @@ export class PostCardComponent implements OnInit, OnDestroy {
       })
       .catch(err => {
         //TODO: MessageService
+        console.log(err.message);
       })
       .finally(() => this.processingAction = false);
   }
@@ -134,7 +151,13 @@ export class PostCardComponent implements OnInit, OnDestroy {
       })
       .catch(err => {
         //TODO: MessageService
+        console.log(err.message);
       })
       .finally(() => this.processingAction = false);
+  }
+
+  quotePost() {
+    this.postService.quotePost(this.post().uri);
+    this.rtMenuVisible = false;
   }
 }

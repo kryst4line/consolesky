@@ -17,6 +17,8 @@ import {IsFeedDefsGeneratorViewPipe} from '@shared/pipes/type-guards/is-feed-def
 import {IsGraphDefsListViewPipe} from '@shared/pipes/type-guards/is-graph-defs-list-view';
 import {IsLabelerDefsLabelerViewPipe} from '@shared/pipes/type-guards/is-labeler-defs-labeler-view';
 import {IsGraphDefsStarterPackViewBasicPipe} from '@shared/pipes/type-guards/is-graph-defs-starterpack-viewbasic';
+import {IsEmbedExternalViewPipe} from '@shared/pipes/type-guards/is-embed-external-view.pipe';
+import {ExternalEmbedComponent} from '@components/embeds/external-embed/external-embed.component';
 
 @Component({
   selector: 'record-embed',
@@ -37,7 +39,9 @@ import {IsGraphDefsStarterPackViewBasicPipe} from '@shared/pipes/type-guards/is-
     IsFeedDefsGeneratorViewPipe,
     IsGraphDefsListViewPipe,
     IsLabelerDefsLabelerViewPipe,
-    IsGraphDefsStarterPackViewBasicPipe
+    IsGraphDefsStarterPackViewBasicPipe,
+    IsEmbedExternalViewPipe,
+    ExternalEmbedComponent
   ],
   templateUrl: './record-embed.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush

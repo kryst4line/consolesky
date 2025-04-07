@@ -1,5 +1,5 @@
 <div
-  class="flex px-2 py-3 gap-2"
+  class="flex gap-2"
 >
   <avatar
     [src]="post().author.avatar"
@@ -29,9 +29,11 @@
       [ngTemplateOutletContext]="{embed: post().embed}"
     />
 
-    <ng-container
-      [ngTemplateOutlet]="info"
-    />
+    @if (!hideButtons()) {
+      <ng-container
+        [ngTemplateOutlet]="buttons"
+      />
+    }
   </div>
 </div>
 
@@ -188,7 +190,7 @@
 </ng-template>
 
 <ng-template
-  #info
+  #buttons
 >
   <div
     class="flex mt-1 gap-4"
@@ -265,6 +267,7 @@
           <li>
             <button
               class="btn-dropdown"
+              (click)="quotePost()"
             >
               Quote post
             </button>

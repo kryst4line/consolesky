@@ -19,6 +19,7 @@ export class EmbedService {
     return this.httpClient.get(`https://cardyb.bsky.app/v1/extract?url=${url}`)
       .pipe(
         map((res: any) => {
+          console.log(res)
           const metadata = new UrlMetadata();
           metadata.url = res.url;
           metadata.title = res.title;

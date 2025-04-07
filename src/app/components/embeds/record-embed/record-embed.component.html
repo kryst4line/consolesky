@@ -114,6 +114,13 @@
     />
   }
 
+  @if (media | isEmbedExternalView) {
+    <external-embed
+      [external]="media.external"
+      [class]="margin"
+    />
+  }
+
   @if (media | isEmbedRecordWithMediaView) {
     @if (media.media | isEmbedImagesView) {
       <images-embed
@@ -125,6 +132,13 @@
     @if (media.media | isEmbedVideoView) {
       <video-embed
         [embed]="media.media"
+        [class]="margin"
+      />
+    }
+
+    @if (media.media | isEmbedExternalView) {
+      <external-embed
+        [external]="media.media.external"
         [class]="margin"
       />
     }
