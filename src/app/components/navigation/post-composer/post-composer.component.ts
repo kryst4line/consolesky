@@ -31,6 +31,7 @@ import {IsFeedDefsGeneratorViewPipe} from '@shared/pipes/type-guards/is-feed-def
 import {IsGraphDefsListViewPipe} from '@shared/pipes/type-guards/is-graph-defs-list-view';
 import {IsGraphDefsStarterPackViewPipe} from '@shared/pipes/type-guards/is-graph-defs-starterpack-view';
 import {ExternalEmbedComponent} from '@components/embeds/external-embed/external-embed.component';
+import {MessageService} from '@services/message.service';
 
 @Component({
   selector: 'post-composer',
@@ -88,7 +89,8 @@ export class PostComposerComponent {
     protected postService: PostService,
     private embedService: EmbedService,
     private elementRef: ElementRef,
-    private cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef,
+    protected messageService: MessageService
   ) {}
 
   formatText(event: Event) {
@@ -160,10 +162,7 @@ export class PostComposerComponent {
         next: metadata => {
           embed.metadata = metadata;
           this.postService.postCompose().mediaEmbed.set(embed);
-          console.log(embed)
-        },
-        //TODO: MessageService
-        error: err => console.log(err.message)
+        }, error: err => this.messageService.error(err.message)
       });
     }
   }
@@ -240,14 +239,12 @@ export class PostComposerComponent {
   publishPost() {
     this.loading = true;
 
-    this.postService.publishPost().then(
-      () => {
-        //TODO: MessageService
-        // this.messageService.info('Your post has been successfully published');
-      },
-      //TODO: MessageService
-      err => console.log(err.message)
-    ).finally(() => this.loading = false);
+    this.postService.publishPost()
+      .then(() => {
+        this.messageService.info('post has been published')
+      })
+      .catch(err => this.messageService.error(err.message))
+      .finally(() => this.loading = false);
   }
 
   @HostListener('dragenter', ['$event'])

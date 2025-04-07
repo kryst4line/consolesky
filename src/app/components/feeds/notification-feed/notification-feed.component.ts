@@ -17,6 +17,7 @@ import NotificationUtils from '@shared/utils/notification-utils';
 import {Notification} from '@models/notification';
 import {IsNotificationArrayPipe} from '@shared/pipes/type-guards/notifications/is-post-notification';
 import {NotificationCardComponent} from '@components/cards/notification-card/notification-card.component';
+import {MessageService} from '@services/message.service';
 
 @Component({
   selector: 'notification-feed',
@@ -41,6 +42,7 @@ export class NotificationFeedComponent implements OnInit, OnDestroy {
 
   constructor(
     private postService: PostService,
+    private messageService: MessageService,
     public cdRef: ChangeDetectorRef
   ) {}
 
@@ -68,8 +70,7 @@ export class NotificationFeedComponent implements OnInit, OnDestroy {
               this.manageRefresh();
             }, 500);
           });
-        //TODO: MessageService
-      }, error: err => console.log(err.message)
+      }, error: err => this.messageService.error(err.message)
     });
   }
 
@@ -95,8 +96,7 @@ export class NotificationFeedComponent implements OnInit, OnDestroy {
         setTimeout(() => {
           this.loading = false;
         }, 500);
-        //TODO: MessageService
-      }, error: err => console.log(err.message)
+      }, error: err => this.messageService.error(err.message)
     });
   }
 
@@ -132,7 +132,7 @@ export class NotificationFeedComponent implements OnInit, OnDestroy {
               } else {
                 this.manageRefresh();
               }
-            }
+            }, error: err => this.messageService.error(err.message)
           });
         } else {
           this.reloadReady = true;

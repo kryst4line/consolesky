@@ -31,6 +31,7 @@ import {PostService} from '@services/post.service';
 import {OverlayModule} from '@angular/cdk/overlay';
 import {ExternalEmbedComponent} from '@components/embeds/external-embed/external-embed.component';
 import {IsEmbedExternalViewPipe} from '@shared/pipes/type-guards/is-embed-external-view.pipe';
+import {MessageService} from '@services/message.service';
 
 @Component({
   selector: 'post-card',
@@ -72,6 +73,7 @@ export class PostCardComponent implements OnInit, OnDestroy {
 
   constructor(
     private postService: PostService,
+    private messageService: MessageService,
     private cdRef: ChangeDetectorRef
   ) {
     effect(() => {
@@ -108,10 +110,7 @@ export class PostCardComponent implements OnInit, OnDestroy {
       .then(() => {
         this.cdRef.markForCheck();
       })
-      .catch(err => {
-        //TODO: MessageService
-        console.log(err.message);
-      })
+      .catch(err => this.messageService.error(err.message))
       .finally(() => this.processingAction = false);
   }
 
@@ -132,10 +131,7 @@ export class PostCardComponent implements OnInit, OnDestroy {
       .then(() => {
         this.cdRef.markForCheck();
       })
-      .catch(err => {
-        //TODO: MessageService
-        console.log(err.message);
-      })
+      .catch(err => this.messageService.error(err.message))
       .finally(() => this.processingAction = false);
   }
 
@@ -149,10 +145,7 @@ export class PostCardComponent implements OnInit, OnDestroy {
       .then(() => {
         this.cdRef.markForCheck();
       })
-      .catch(err => {
-        //TODO: MessageService
-        console.log(err.message);
-      })
+      .catch(err => this.messageService.error(err.message))
       .finally(() => this.processingAction = false);
   }
 

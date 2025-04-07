@@ -4,10 +4,13 @@ import {from} from 'rxjs';
 import {agent} from '@core/bsky.api';
 import {AuthService} from '@core/auth/auth.service';
 import type * as AppBskyUnspeccedDefs from '@atproto/api/src/client/types/app/bsky/unspecced/defs';
+import {LoggerComponent} from '@components/shared/logger/logger.component';
 
 @Component({
   selector: 'auxbar',
-  imports: [],
+  imports: [
+    LoggerComponent
+  ],
   templateUrl: './auxbar.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })

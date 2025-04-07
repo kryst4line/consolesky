@@ -18,6 +18,7 @@ import {PostUtils} from '@shared/utils/post-utils';
 import {SignalizedFeedViewPost} from '@models/signalized-feed-view-post';
 import {from} from 'rxjs';
 import {PostCardComponent} from '@components/cards/post-card/post-card.component';
+import {MessageService} from '@services/message.service';
 
 @Component({
   selector: 'author-feed',
@@ -41,7 +42,7 @@ export class AuthorFeedComponent implements OnInit, OnDestroy {
 
   constructor(
     private postService: PostService,
-    // private dialogService: MskyDialogService,
+    private messageService: MessageService,
     public cdRef: ChangeDetectorRef
   ) {}
 
@@ -79,8 +80,7 @@ export class AuthorFeedComponent implements OnInit, OnDestroy {
           this.loading = false;
           this.manageRefresh();
         }, 500);
-        //TODO: MessageService
-      }, error: err => console.log(err.message)
+      }, error: err => this.messageService.error(err.message)
     });
   }
 
@@ -101,8 +101,7 @@ export class AuthorFeedComponent implements OnInit, OnDestroy {
         setTimeout(() => {
           this.loading = false;
         }, 500);
-        //TODO: MessageService
-      }, error: err => console.log(err.message)
+      }, error: err => this.messageService.error(err.message)
     });
   }
 
@@ -151,8 +150,7 @@ export class AuthorFeedComponent implements OnInit, OnDestroy {
               } else {
                 this.manageRefresh();
               }
-              //TODO: MessageService
-            }, error: err => console.log(err.message)
+            }, error: err => this.messageService.error(err.message)
           });
         } else {
           this.reloadReady = true;

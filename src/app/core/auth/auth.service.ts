@@ -2,12 +2,11 @@ import {Injectable, signal} from '@angular/core';
 import {BehaviorSubject, from} from 'rxjs';
 import {AppBskyActorDefs, AtpAgentLoginOpts} from "@atproto/api";
 import {Router} from "@angular/router";
-import {HttpErrorResponse} from "@angular/common/http";
 import {StorageKeys} from '@core/storage-keys';
 import {agent} from '@core/bsky.api';
 import {StorageService} from '@services/storage.service';
-// import {MskyMessageService} from '@services/msky-message.service';
 import {ColumnService} from '@services/column.service';
+import {MessageService} from '@services/message.service';
 
 @Injectable({
   providedIn: 'root',
@@ -19,7 +18,7 @@ export class AuthService {
   constructor(
     private router: Router,
     private storageService: StorageService,
-    // private messageService: MskyMessageService,
+    private messageService: MessageService,
     private columnService: ColumnService
   ) {
     this.checkToken();
@@ -57,24 +56,19 @@ export class AuthService {
 
             this.authenticationState.next(true);
             this.router.navigate(['']);
-            //TODO: MessageService
-          }, error: err => console.log(err.message)
+          }, error: err => this.messageService.error(err.message)
         });
-      },
-      error: (err: HttpErrorResponse) => {
-        //TODO: MessageService
-        // this.messageService.warn(err.message, 'Oops!');
-      }
+      }, error: err => this.messageService.error(err.message)
     });
   }
 
   logout() {
-    agent.logout().then(
-      () => {
+    from(agent.logout()).subscribe({
+      next: () => {
         this.storageService.remove(StorageKeys.TOKEN_KEY);
         this.authenticationState.next(false);
-      }
-    );
+      }, error: err => this.messageService.error(err.message)
+    });
   }
 
   isAuthenticated() {
