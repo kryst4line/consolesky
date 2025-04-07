@@ -108,6 +108,7 @@ export class AuthorFeedComponent implements OnInit, OnDestroy {
 
   openPost(uri: string) {
     //TODO: OpenPost
+
     // Mute all video players
     // this.feed().nativeElement.querySelectorAll('video').forEach((video: HTMLVideoElement) => {
     //   video.muted = true;

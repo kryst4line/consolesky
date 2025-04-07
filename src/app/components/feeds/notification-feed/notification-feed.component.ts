@@ -102,6 +102,7 @@ export class NotificationFeedComponent implements OnInit, OnDestroy {
 
   openNotification(notification: Notification) {
     //TODO: OpenNotification
+
     // Mute all video players
     // this.feed().nativeElement.querySelectorAll('video').forEach((video: HTMLVideoElement) => {
     //   video.muted = true;
