@@ -1,5 +1,12 @@
-import {ChangeDetectionStrategy, Component, input} from '@angular/core';
-import {$Typed, AppBskyEmbedRecord, AppBskyFeedDefs, AppBskyGraphDefs, AppBskyLabelerDefs} from '@atproto/api';
+import {ChangeDetectionStrategy, Component, input, output} from '@angular/core';
+import {
+  $Typed,
+  AppBskyEmbedImages,
+  AppBskyEmbedRecord,
+  AppBskyFeedDefs,
+  AppBskyGraphDefs,
+  AppBskyLabelerDefs
+} from '@atproto/api';
 import {DisplayNamePipe} from '@shared/pipes/display-name.pipe';
 import {IsEmbedRecordViewRecordPipe} from '@shared/pipes/type-guards/is-embed-record-viewrecord.pipe';
 import {NgTemplateOutlet} from '@angular/common';
@@ -60,4 +67,12 @@ export class RecordEmbedComponent {
   >();
   protected readonly AppBskyFeedDefs = AppBskyFeedDefs;
   protected readonly AppBskyGraphDefs = AppBskyGraphDefs;
+
+  onClick = output();
+  onImgClick = output<{images: AppBskyEmbedImages.ViewImage[], index: number}>();
+
+  recordClick(event: Event) {
+    event.stopPropagation();
+    this.onClick.emit();
+  }
 }

@@ -15,6 +15,7 @@ export class ImagesEmbedComponent {
   onClick = output<number>();
 
   imgClick(index: number, event: Event) {
-
+    event.stopPropagation();
+    this.onClick.emit(index);
   }
 }

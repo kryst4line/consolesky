@@ -15,10 +15,11 @@ import {IsRepostNotificationPipe} from '@shared/pipes/type-guards/notifications/
 import {IsStarterPackNotificationPipe} from '@shared/pipes/type-guards/notifications/is-starterpack-notification.pipe';
 import {NgTemplateOutlet, SlicePipe} from '@angular/common';
 import {DisplayNamePipe} from '@shared/pipes/display-name.pipe';
-import {AppBskyFeedDefs} from '@atproto/api';
+import {AppBskyEmbedImages, AppBskyFeedDefs} from '@atproto/api';
 import {IsEmbedImagesViewPipe} from '@shared/pipes/type-guards/is-embed-images-view.pipe';
 import {IsEmbedVideoViewPipe} from '@shared/pipes/type-guards/is-embed-video-view.pipe';
 import {IsEmbedRecordWithMediaViewPipe} from '@shared/pipes/type-guards/is-embed-recordwithmedia-view.pipe';
+import {DialogService} from '@services/dialog.service';
 
 @Component({
   selector: 'notification-card',
@@ -44,6 +45,7 @@ export class NotificationCardComponent implements OnInit {
   post: WritableSignal<AppBskyFeedDefs.PostView>;
 
   constructor(
+    private dialogService: DialogService,
     private cdRef: ChangeDetectorRef
   ) {}
 
@@ -54,5 +56,10 @@ export class NotificationCardComponent implements OnInit {
 
   openAuthor(event: Event, did: string) {
     //TODO: OpenAuthor
+  }
+
+  openImage(event: Event, images: AppBskyEmbedImages.ViewImage[], index: number) {
+    event.stopPropagation();
+    this.dialogService.openImage(images, index);
   }
 }

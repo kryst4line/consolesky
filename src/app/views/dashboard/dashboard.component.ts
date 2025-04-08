@@ -4,8 +4,6 @@ import {DeckComponent} from '@components/navigation/deck/deck.component';
 import {PostComposerComponent} from '@components/navigation/post-composer/post-composer.component';
 import {PostService} from '@services/post.service';
 import {AuxbarComponent} from '@components/navigation/auxbar/auxbar.component';
-// import {MskyDialogService} from '@services/msky-dialog.service';
-// import {PostService} from '@services/post.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -20,7 +18,6 @@ import {AuxbarComponent} from '@components/navigation/auxbar/auxbar.component';
 })
 export class DashboardComponent {
   constructor(
-    // protected dialogService: MskyDialogService,
     protected postService: PostService
   ) {}
 }

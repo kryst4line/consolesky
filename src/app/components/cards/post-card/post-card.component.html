@@ -133,6 +133,7 @@
   @if (embed | isEmbedRecordView) {
     <record-embed
       [record]="embed.record"
+      (onImgClick)="openImage($event.images, $event.index)"
       class="mt-2 p-2 hover:bg-primary/2"
     />
   }
@@ -140,6 +141,7 @@
   @if (embed | isEmbedImagesView) {
     <images-embed
       [images]="embed.images"
+      (onClick)="openImage(embed.images, $event)"
       class="mb-1"
       [class]="$any(post().record).text.length ? 'mt-2' : 'mt-3'"
     />
@@ -165,6 +167,7 @@
         [images]="embed.media.images"
         class="mb-1"
         [class]="$any(post().record).text.length ? 'mt-2' : 'mt-3'"
+        (onClick)="openImage(embed.media.images, $event)"
       />
     }
 
@@ -184,6 +187,7 @@
 
     <record-embed
       [record]="embed.record.record"
+      (onImgClick)="openImage($event.images, $event.index)"
       class="mt-2 p-2 hover:bg-primary/2"
     />
   }

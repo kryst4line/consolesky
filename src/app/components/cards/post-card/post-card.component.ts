@@ -9,7 +9,7 @@ import {
   OnDestroy,
   OnInit
 } from '@angular/core';
-import {AppBskyFeedDefs} from '@atproto/api';
+import {AppBskyEmbedImages, AppBskyFeedDefs} from '@atproto/api';
 import {AvatarComponent} from '@components/shared/avatar/avatar.component';
 import {DisplayNamePipe} from '@shared/pipes/display-name.pipe';
 import {IsFeedPostRecordPipe} from '@shared/pipes/type-guards/is-feed-post-record';
@@ -32,6 +32,7 @@ import {OverlayModule} from '@angular/cdk/overlay';
 import {ExternalEmbedComponent} from '@components/embeds/external-embed/external-embed.component';
 import {IsEmbedExternalViewPipe} from '@shared/pipes/type-guards/is-embed-external-view.pipe';
 import {MessageService} from '@services/message.service';
+import {DialogService} from '@services/dialog.service';
 
 @Component({
   selector: 'post-card',
@@ -74,6 +75,7 @@ export class PostCardComponent implements OnInit, OnDestroy {
   constructor(
     private postService: PostService,
     private messageService: MessageService,
+    private dialogService: DialogService,
     private cdRef: ChangeDetectorRef
   ) {
     effect(() => {
@@ -152,5 +154,9 @@ export class PostCardComponent implements OnInit, OnDestroy {
   quotePost() {
     this.postService.quotePost(this.post().uri);
     this.rtMenuVisible = false;
+  }
+
+  openImage(images: AppBskyEmbedImages.ViewImage[], index: number) {
+    this.dialogService.openImage(images, index);
   }
 }

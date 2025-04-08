@@ -14,7 +14,7 @@ html, body, .app-container {
   color: var(--color-primary);
 }
 
-* {
+app-root * {
   box-sizing: border-box;
   scrollbar-width: thin;
   scrollbar-gutter: stable;

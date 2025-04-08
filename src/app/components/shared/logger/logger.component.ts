@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {MessageService} from '@services/message.service';
 import {NgClass} from '@angular/common';
 
@@ -8,6 +8,7 @@ import {NgClass} from '@angular/common';
     NgClass
   ],
   templateUrl: './logger.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class LoggerComponent {
 

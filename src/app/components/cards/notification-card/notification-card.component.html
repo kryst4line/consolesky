@@ -173,10 +173,11 @@
           <div
             class="flex gap-2"
           >
-            @for (image of attachedPost.embed.images; track image.thumb) {
+            @for (image of attachedPost.embed.images; track $index) {
               <img
                 [src]="image.thumb"
                 [alt]="image.alt"
+                (click)="openImage($event, attachedPost.embed.images, $index)"
                 class="h-16 w-16 object-cover"
               />
             }
@@ -196,10 +197,11 @@
             <div
               class="flex gap-2"
             >
-              @for (image of attachedPost.embed.media.images; track image.thumb) {
+              @for (image of attachedPost.embed.media.images; track $index) {
                 <img
                   [src]="image.thumb"
                   [alt]="image.alt"
+                  (click)="openImage($event, attachedPost.embed.media.images, $index)"
                   class="h-16 w-16 object-cover"
                 />
               }
