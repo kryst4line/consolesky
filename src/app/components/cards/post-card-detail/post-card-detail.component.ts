@@ -7,20 +7,16 @@ import {
   input,
   model,
   OnDestroy,
-  OnInit,
-  output
+  OnInit
 } from '@angular/core';
-import {AppBskyEmbedRecord, AppBskyFeedDefs} from '@atproto/api';
+import {AppBskyEmbedImages, AppBskyFeedDefs} from '@atproto/api';
 import {AvatarComponent} from '@components/shared/avatar/avatar.component';
 import {DisplayNamePipe} from '@shared/pipes/display-name.pipe';
 import {IsFeedPostRecordPipe} from '@shared/pipes/type-guards/is-feed-post-record';
 import {RichTextComponent} from '@components/shared/rich-text/rich-text.component';
-import {NgClass, NgTemplateOutlet} from '@angular/common';
-import {IsFeedDefsPostViewPipe} from '@shared/pipes/type-guards/is-feed-defs-postview';
-import {DateFormatterPipe} from '@shared/pipes/date-formatter.pipe';
+import {DatePipe, NgClass, NgTemplateOutlet} from '@angular/common';
 import {IsEmbedRecordViewPipe} from '@shared/pipes/type-guards/is-embed-record-view.pipe';
 import {RecordEmbedComponent} from '@components/embeds/record-embed/record-embed.component';
-import {IsFeedDefsReasonRepostPipe} from '@shared/pipes/type-guards/is-feed-defs-reasonrepost';
 import {IsEmbedImagesViewPipe} from '@shared/pipes/type-guards/is-embed-images-view.pipe';
 import {ImagesEmbedComponent} from '@components/embeds/images-embed/images-embed.component';
 import {LinkExtractorPipe} from '@shared/pipes/link-extractor.pipe';
@@ -36,18 +32,15 @@ import {MessageService} from '@services/message.service';
 import {DialogService} from '@services/dialog.service';
 
 @Component({
-  selector: 'post-card',
+  selector: 'post-card-detail',
   imports: [
     AvatarComponent,
     DisplayNamePipe,
     IsFeedPostRecordPipe,
     RichTextComponent,
     NgTemplateOutlet,
-    IsFeedDefsPostViewPipe,
-    DateFormatterPipe,
     IsEmbedRecordViewPipe,
     RecordEmbedComponent,
-    IsFeedDefsReasonRepostPipe,
     IsEmbedImagesViewPipe,
     ImagesEmbedComponent,
     LinkExtractorPipe,
@@ -58,23 +51,25 @@ import {DialogService} from '@services/dialog.service';
     OverlayModule,
     NgClass,
     ExternalEmbedComponent,
-    IsEmbedExternalViewPipe
+    IsEmbedExternalViewPipe,
+    DatePipe
   ],
-  templateUrl: './post-card.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  templateUrl: './post-card-detail.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    DatePipe
+  ]
 })
-export class PostCardComponent implements OnInit, OnDestroy {
+export class PostCardDetailComponent implements OnInit, OnDestroy {
   post = model<AppBskyFeedDefs.PostView>();
   reply = input<AppBskyFeedDefs.ReplyRef>();
   reason = input<AppBskyFeedDefs.ReasonRepost | AppBskyFeedDefs.ReasonPin | { [k: string]: unknown; $type: string; }>();
   hideButtons = input(false, {transform: booleanAttribute});
-  parent = input(false, {transform: booleanAttribute});
-
-  onEmbedRecord = output<AppBskyEmbedRecord.View>();
 
   refreshInterval: ReturnType<typeof setInterval>;
   processingAction = false;
   rtMenuVisible = false;
+  moreMenuVisible = false;
 
   constructor(
     private postService: PostService,
@@ -122,7 +117,6 @@ export class PostCardComponent implements OnInit, OnDestroy {
 
   repostAction(event: Event) {
     event.stopPropagation();
-
     if (this.processingAction) return;
     this.rtMenuVisible = false;
     this.processingAction = true;
@@ -161,8 +155,7 @@ export class PostCardComponent implements OnInit, OnDestroy {
     this.rtMenuVisible = false;
   }
 
-  emitEmbedRecord(event: Event, record: AppBskyEmbedRecord.View) {
-    event.stopPropagation();
-    this.onEmbedRecord.emit(record);
+  openImage(images: AppBskyEmbedImages.ViewImage[], index: number) {
+    this.dialogService.openImage(images, index);
   }
 }

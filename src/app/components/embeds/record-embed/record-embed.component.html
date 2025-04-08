@@ -2,7 +2,6 @@
 
 <div
   class="flex"
-  (click)="recordClick($event)"
 >
   <div
     class="overflow-hidden shrink-0 h-5 w-9 flex items-center justify-center"
@@ -104,8 +103,8 @@
   @if (media | isEmbedImagesView) {
     <images-embed
       [images]="media.images"
+      class="cursor-pointer"
       [class]="margin"
-      (onClick)="onImgClick.emit({images: media.images, index: $event})"
     />
   }
 
@@ -127,8 +126,8 @@
     @if (media.media | isEmbedImagesView) {
       <images-embed
         [images]="media.media.images"
+        class="cursor-pointer"
         [class]="margin"
-        (onClick)="onImgClick.emit({images: media.media.images, index: $event})"
       />
     }
 

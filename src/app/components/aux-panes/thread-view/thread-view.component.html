@@ -1,0 +1,38 @@
+@if (loadReady()) {
+  <div
+    #scroll
+    class="flex flex-col h-full overflow-y-auto"
+  >
+    @for (parent of parents(); track $index) {
+      @if ((parent | isFeedDefsNotFoundPost) || (parent | isFeedDefsBlockedPost)) {
+        <ng-container
+          [ngTemplateOutlet]="notPostView"
+          [ngTemplateOutletContext]="{post: parent}"
+        />
+      } @else {
+        <post-card
+          [post]="parent()"
+          (postChange)="parent.set($event)"
+          (click)="dialogService.openThread(parent().uri)"
+          (onEmbedRecord)="dialogService.openRecord($event)"
+          class="cursor-pointer hover:bg-primary/2 w-full px-3 pt-3 pb-1"
+          parent
+        />
+      }
+    }
+
+    <post-card-detail
+      #mainCard
+      [post]="post()"
+      class="block p-3"
+    />
+
+    <divider/>
+  </div>
+}
+
+<ng-template
+  #notPostView
+>
+
+</ng-template>

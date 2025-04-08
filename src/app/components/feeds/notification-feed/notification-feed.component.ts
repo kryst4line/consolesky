@@ -18,6 +18,8 @@ import {Notification} from '@models/notification';
 import {IsNotificationArrayPipe} from '@shared/pipes/type-guards/notifications/is-post-notification';
 import {NotificationCardComponent} from '@components/cards/notification-card/notification-card.component';
 import {MessageService} from '@services/message.service';
+import {DividerComponent} from '@components/shared/divider/divider.component';
+import {DialogService} from '@services/dialog.service';
 
 @Component({
   selector: 'notification-feed',
@@ -27,6 +29,7 @@ import {MessageService} from '@services/message.service';
     PostCardComponent,
     IsNotificationArrayPipe,
     NotificationCardComponent,
+    DividerComponent,
   ],
   templateUrl: './notification-feed.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -42,8 +45,9 @@ export class NotificationFeedComponent implements OnInit, OnDestroy {
 
   constructor(
     private postService: PostService,
+    protected dialogService: DialogService,
     private messageService: MessageService,
-    public cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -100,17 +104,6 @@ export class NotificationFeedComponent implements OnInit, OnDestroy {
     });
   }
 
-  openNotification(notification: Notification) {
-    //TODO: OpenNotification
-
-    // Mute all video players
-    // this.feed().nativeElement.querySelectorAll('video').forEach((video: HTMLVideoElement) => {
-    //   video.muted = true;
-    // });
-    //
-    // this.dialogService.openThread(uri, this.feed().nativeElement);
-  }
-
   manageRefresh() {
     if (this.loading) return;
 
@@ -142,6 +135,15 @@ export class NotificationFeedComponent implements OnInit, OnDestroy {
     } else if (this.reloadReady && this.feed().nativeElement.scrollTop == 0) {
       this.reloadReady = false;
       this.initData();
+    }
+  }
+
+  openNotification(notification: Notification) {
+    if (
+      notification.reason == 'like' ||
+      notification.reason == 'repost'
+    ) {
+      this.dialogService.openThread(notification.uri)
     }
   }
 }

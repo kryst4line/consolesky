@@ -1,6 +1,5 @@
 <div
-  class="flex gap-2"
-  (click)="onClick.emit(notification())"
+  class="flex gap-3"
 >
   @if (
     (notification() | isLikeNotification) ||
@@ -76,6 +75,7 @@
       >
         <avatar
           [src]="author.avatar"
+          (click)="openAuthor($event, author.did)"
         />
       </a>
     }

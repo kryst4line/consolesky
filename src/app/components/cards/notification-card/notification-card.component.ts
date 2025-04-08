@@ -1,12 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  input,
-  OnInit,
-  output,
-  WritableSignal
-} from '@angular/core';
+import {ChangeDetectionStrategy, ChangeDetectorRef, Component, input, OnInit, WritableSignal} from '@angular/core';
 import {Notification} from '@models/notification';
 import {AvatarComponent} from '@components/shared/avatar/avatar.component';
 import {IsLikeNotificationPipe} from '@shared/pipes/type-guards/notifications/is-like-notification.pipe';
@@ -41,7 +33,6 @@ import {DialogService} from '@services/dialog.service';
 })
 export class NotificationCardComponent implements OnInit {
   notification = input<Notification>();
-  onClick = output<Notification>();
   post: WritableSignal<AppBskyFeedDefs.PostView>;
 
   constructor(
@@ -56,6 +47,7 @@ export class NotificationCardComponent implements OnInit {
 
   openAuthor(event: Event, did: string) {
     //TODO: OpenAuthor
+    event.stopPropagation();
   }
 
   openImage(event: Event, images: AppBskyEmbedImages.ViewImage[], index: number) {

@@ -1,6 +1,7 @@
-import {ChangeDetectionStrategy, Component, input, output} from '@angular/core';
+import {ChangeDetectionStrategy, Component, input} from '@angular/core';
 import {AppBskyEmbedImages} from '@atproto/api';
 import {NgOptimizedImage} from '@angular/common';
+import {DialogService} from '@services/dialog.service';
 
 @Component({
   selector: 'images-embed',
@@ -12,10 +13,13 @@ import {NgOptimizedImage} from '@angular/common';
 })
 export class ImagesEmbedComponent {
   images = input<AppBskyEmbedImages.ViewImage[]>();
-  onClick = output<number>();
+
+  constructor(
+    private dialogService: DialogService
+  ) {}
 
   imgClick(index: number, event: Event) {
     event.stopPropagation();
-    this.onClick.emit(index);
+    this.dialogService.openImage(this.images(), index);
   }
 }

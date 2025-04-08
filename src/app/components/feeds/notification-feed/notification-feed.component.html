@@ -11,19 +11,19 @@
         <post-card
           [post]="notification.post()"
           (postChange)="notification.post.set($event)"
-          class="cursor-pointer hover:bg-primary/2 w-full py-3 px-2"
+          (click)="dialogService.openThread(notification.post().uri)"
+          (onEmbedRecord)="dialogService.openRecord($event)"
+          class="cursor-pointer hover:bg-primary/2 w-full p-3"
         />
       } @else {
         <notification-card
           [notification]="notification"
-          (onClick)="openNotification($event)"
-          class="cursor-pointer hover:bg-primary/2 w-full py-3 px-2"
+          (click)="openNotification(notification)"
+          class="cursor-pointer hover:bg-primary/2 w-full p-3"
         />
       }
-      <div
-        class="border-b border-b-primary/10 w-9/10"
-        style="mask-image: linear-gradient(to right, transparent, #000000 50%, transparent);"
-      ></div>
+
+      <divider/>
     }
 <!--  } @else {-->
 <!--    <div-->

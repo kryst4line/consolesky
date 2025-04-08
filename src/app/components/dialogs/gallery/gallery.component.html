@@ -2,10 +2,18 @@
   class="flex flex-col gap-4 items-center justify-center absolute top-[1rem] left-[5rem] h-[calc(100%_-_4rem)] w-[calc(100%_-_10rem)] pointer-events-none"
   [class]="{'h-[calc(100%_-_4rem)]': images.length > 1, 'h-[calc(100%_-_2rem)]': images.length == 1}"
 >
-  <img
-    [src]="images[index].fullsize"
-    class="flex-1 min-h-0 min-w-0 w-fit pointer-events-auto"
-  />
+  <a
+    (click)="$event.stopPropagation()"
+    [href]="images[index].fullsize"
+    target="_blank"
+    class="relative w-auto h-auto max-w-[calc(100%_-_10rem)] max-h-[calc(100%_-_4rem)] outline-none pointer-events-auto cursor-pointer"
+  >
+    <img
+      [src]="images[index].fullsize"
+      [alt]="images[index].alt"
+      class="w-auto h-auto max-w-full max-h-full"
+    />
+  </a>
 
   @if (images[index].alt) {
     <span

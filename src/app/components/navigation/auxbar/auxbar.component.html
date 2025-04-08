@@ -1,15 +1,28 @@
 <div
   class="h-full w-xs flex flex-col"
+  [class.!w-lg]="dialogService.auxPanes().length"
 >
   <div
     class="flex h-9 w-full shrink-0"
+    [ngClass]="{'border-b border-primary': dialogService.auxPanes().length}"
   >
-<!--    <span-->
-<!--      class="bg-primary text-bg text-xl font-bold flex items-center px-3"-->
-<!--    >//consolesky.</span>-->
+    @if (dialogService.auxPanes().length) {
+      <span
+        class="bg-primary text-bg text-xl font-medium flex items-center px-3"
+      >thread view</span>
+      <span
+        (click)="closePane()"
+        class="text-primary font-semibold flex items-center px-3 hover:underline cursor-pointer"
+      >close</span>
+
+      <span
+        (click)="dialogService.auxPanes.set([])"
+        class="text-primary font-semibold flex items-center px-3 hover:underline cursor-pointer ml-auto"
+      >close all</span>
+    }
   </div>
   <div
-    class="flex flex-col flex-1 border-l border-primary"
+    class="relative flex flex-col flex-1 min-h-0 min-w-0 border-l border-primary"
   >
     <span
       class="text-lg font-bold ml-3"
@@ -22,6 +35,12 @@
         class="ml-3 mt-1"
       >{{topic.topic}}</span>
     }
+
+    @if (dialogService.auxPanes().length) {
+      <ng-container
+        [ngTemplateOutlet]="auxPane"
+      />
+    }
   </div>
 
   <div
@@ -32,3 +51,19 @@
     />
   </div>
 </div>
+
+<ng-template
+  #auxPane
+>
+  @for (pane of dialogService.auxPanes(); track $index) {
+    <div
+      class="absolute h-full w-full bg-bg overflow-y-auto"
+    >
+      @if (pane | isAuxPaneThread) {
+        <thread-view
+          [uri]="pane.uri"
+        />
+      }
+    </div>
+  }
+</ng-template>

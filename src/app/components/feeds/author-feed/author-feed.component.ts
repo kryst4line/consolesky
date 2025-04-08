@@ -19,6 +19,8 @@ import {SignalizedFeedViewPost} from '@models/signalized-feed-view-post';
 import {from} from 'rxjs';
 import {PostCardComponent} from '@components/cards/post-card/post-card.component';
 import {MessageService} from '@services/message.service';
+import {DialogService} from '@services/dialog.service';
+import {DividerComponent} from '@components/shared/divider/divider.component';
 
 @Component({
   selector: 'author-feed',
@@ -26,6 +28,7 @@ import {MessageService} from '@services/message.service';
     CommonModule,
     ScrollDirective,
     PostCardComponent,
+    DividerComponent,
   ],
   templateUrl: './author-feed.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -42,8 +45,9 @@ export class AuthorFeedComponent implements OnInit, OnDestroy {
 
   constructor(
     private postService: PostService,
+    protected dialogService: DialogService,
     private messageService: MessageService,
-    public cdRef: ChangeDetectorRef
+    private cdRef: ChangeDetectorRef
   ) {}
 
   ngOnInit() {
@@ -103,17 +107,6 @@ export class AuthorFeedComponent implements OnInit, OnDestroy {
         }, 500);
       }, error: err => this.messageService.error(err.message)
     });
-  }
-
-  openPost(uri: string) {
-    //TODO: OpenPost
-
-    // Mute all video players
-    // this.feed().nativeElement.querySelectorAll('video').forEach((video: HTMLVideoElement) => {
-    //   video.muted = true;
-    // });
-    //
-    // this.dialogService.openThread(uri, this.feed().nativeElement);
   }
 
   manageRefresh() {

@@ -18,6 +18,8 @@ import {SignalizedFeedViewPost} from '@models/signalized-feed-view-post';
 import {from} from 'rxjs';
 import {PostCardComponent} from '@components/cards/post-card/post-card.component';
 import {MessageService} from '@services/message.service';
+import {DialogService} from '@services/dialog.service';
+import {DividerComponent} from '@components/shared/divider/divider.component';
 
 @Component({
   selector: 'timeline-feed',
@@ -25,6 +27,7 @@ import {MessageService} from '@services/message.service';
     CommonModule,
     ScrollDirective,
     PostCardComponent,
+    DividerComponent,
   ],
   templateUrl: './timeline-feed.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -41,6 +44,7 @@ export class TimelineFeedComponent implements OnInit, OnDestroy {
   constructor(
     private postService: PostService,
     private messageService: MessageService,
+    protected dialogService: DialogService,
     public cdRef: ChangeDetectorRef
   ) {}
 
@@ -99,17 +103,6 @@ export class TimelineFeedComponent implements OnInit, OnDestroy {
         }, 500);
       }, error: err => this.messageService.error(err.message)
     });
-  }
-
-  openPost(uri: string) {
-    //TODO: OpenPost
-
-    // Mute all video players
-    // this.feed().nativeElement.querySelectorAll('video').forEach((video: HTMLVideoElement) => {
-    //   video.muted = true;
-    // });
-    //
-    // this.dialogService.openThread(uri, this.feed().nativeElement);
   }
 
   manageRefresh() {

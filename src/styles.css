@@ -242,7 +242,6 @@ app-root * {
   }
 
   .btn-dropdown {
-    text-box: trim-both cap alphabetic;
     box-sizing: border-box;
     background-color: var(--color-bg);
     color: var(--color-primary);
