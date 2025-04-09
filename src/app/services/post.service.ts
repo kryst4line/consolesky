@@ -27,7 +27,6 @@ export class PostService {
   public refreshFeeds: Subject<void> = new Subject<void>();
 
   constructor(
-    // private dialogService: MskyDialogService,
     private imageCompressService: NgxImageCompressService
   ) {}
 
@@ -51,7 +50,6 @@ export class PostService {
     if (this.postCompose()) return;
 
     this.postCompose.set(new PostCompose());
-    // this.dialogService.openPostComposer(this.postCompose);
   }
 
   like(post: WritableSignal<AppBskyFeedDefs.PostView>): Promise<void> {
@@ -140,6 +138,7 @@ export class PostService {
             })).subscribe({
               next: response => {
                 post.set(response.data.posts[0]);
+                this.refreshFeeds.next();
                 resolve();
               },
               error: err => reject(err)

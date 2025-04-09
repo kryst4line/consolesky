@@ -9,7 +9,7 @@ import {ChangeDetectionStrategy, Component} from '@angular/core';
     ></div>
   `,
   styles: `
-    :host() {
+    :host {
       width: 100%;
     }
   `,

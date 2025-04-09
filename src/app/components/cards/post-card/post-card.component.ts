@@ -61,6 +61,20 @@ import {DialogService} from '@services/dialog.service';
     IsEmbedExternalViewPipe
   ],
   templateUrl: './post-card.component.html',
+  styles: `
+    .grandparent-border {
+      background-image: repeating-linear-gradient(
+        180deg,
+        color-mix(in oklab, var(--color-primary) 50%, transparent),
+        color-mix(in oklab, var(--color-primary) 50%, transparent) 3px,
+        transparent 3px,
+        transparent 8px
+      );
+      background-position: left top;
+      background-repeat: repeat-y;
+      background-size: 1px 100%;
+    }
+  `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class PostCardComponent implements OnInit, OnDestroy {
@@ -69,6 +83,7 @@ export class PostCardComponent implements OnInit, OnDestroy {
   reason = input<AppBskyFeedDefs.ReasonRepost | AppBskyFeedDefs.ReasonPin | { [k: string]: unknown; $type: string; }>();
   hideButtons = input(false, {transform: booleanAttribute});
   parent = input(false, {transform: booleanAttribute});
+  grandParent = input(false, {transform: booleanAttribute});
 
   onEmbedRecord = output<AppBskyEmbedRecord.View>();
 

@@ -13,7 +13,7 @@
           (postChange)="notification.post.set($event)"
           (click)="dialogService.openThread(notification.post().uri)"
           (onEmbedRecord)="dialogService.openRecord($event)"
-          class="cursor-pointer hover:bg-primary/2 w-full p-3"
+          class="cursor-pointer hover:bg-primary/2 w-full px-3 pt-3 pb-1"
         />
       } @else {
         <notification-card

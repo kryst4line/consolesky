@@ -14,13 +14,13 @@ import {ScrollDirective} from '@shared/directives/scroll.directive';
 import {$Typed} from '@atproto/api';
 import {ReasonRepost} from '@atproto/api/dist/client/types/app/bsky/feed/defs';
 import {PostService} from '@services/post.service';
-import {PostUtils} from '@shared/utils/post-utils';
 import {SignalizedFeedViewPost} from '@models/signalized-feed-view-post';
 import {from} from 'rxjs';
 import {PostCardComponent} from '@components/cards/post-card/post-card.component';
 import {MessageService} from '@services/message.service';
 import {DialogService} from '@services/dialog.service';
 import {DividerComponent} from '@components/shared/divider/divider.component';
+import {FeedService} from '@services/feed.service';
 
 @Component({
   selector: 'author-feed',
@@ -45,6 +45,7 @@ export class AuthorFeedComponent implements OnInit, OnDestroy {
 
   constructor(
     private postService: PostService,
+    private feedService: FeedService,
     protected dialogService: DialogService,
     private messageService: MessageService,
     private cdRef: ChangeDetectorRef
@@ -78,7 +79,7 @@ export class AuthorFeedComponent implements OnInit, OnDestroy {
     })).subscribe({
       next: response => {
         this.cursor = response.data.cursor;
-        this.posts = response.data.feed.map(fvp => PostUtils.parseFeedViewPost(fvp, this.postService));
+        this.posts = response.data.feed.map(fvp => this.feedService.parseFeedViewPost(fvp));
         this.cdRef.markForCheck();
         setTimeout(() => {
           this.loading = false;
@@ -99,7 +100,7 @@ export class AuthorFeedComponent implements OnInit, OnDestroy {
     })).subscribe({
       next: response => {
         this.cursor = response.data.cursor;
-        const newPosts = response.data.feed.map(fvp => PostUtils.parseFeedViewPost(fvp, this.postService));
+        const newPosts = response.data.feed.map(fvp => this.feedService.parseFeedViewPost(fvp));
         this.posts = [...this.posts, ...newPosts];
         this.cdRef.markForCheck();
         setTimeout(() => {
