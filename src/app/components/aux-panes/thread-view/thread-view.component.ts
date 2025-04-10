@@ -22,6 +22,8 @@ import {DialogService} from '@services/dialog.service';
 import {NgTemplateOutlet} from '@angular/common';
 import {DividerComponent} from '@components/shared/divider/divider.component';
 import {SpinnerComponent} from '@components/shared/spinner/spinner.component';
+import {GroupedPost} from '@models/grouped-post';
+import {FeedService} from '@services/feed.service';
 
 @Component({
   selector: 'thread-view',
@@ -41,6 +43,7 @@ export class ThreadViewComponent implements OnInit {
   uri = input.required<string>();
   post = signal<AppBskyFeedDefs.PostView>(undefined);
   parents = signal<WritableSignal<AppBskyFeedDefs.PostView>[]>([]);
+  replies = signal<GroupedPost[]>([]);
 
   loadReady = signal(false);
   mainCard = viewChild('mainCard', {read: ElementRef});
@@ -48,6 +51,7 @@ export class ThreadViewComponent implements OnInit {
 
   constructor(
     private postService: PostService,
+    private feedService: FeedService,
     protected dialogService: DialogService,
     private messageService: MessageService,
     private cdRef: ChangeDetectorRef
@@ -88,6 +92,54 @@ export class ThreadViewComponent implements OnInit {
                 behavior: 'smooth'
               });
             }, 50);
+          }
+
+          //Set grouped replies
+          if (thread.replies) {
+            const replies = thread.replies
+              .filter(reply => AppBskyFeedDefs.isThreadViewPost(reply))
+              .sort((a, b) => new Date((a.post.record as any)?.createdAt).getTime() - new Date((b.post.record as any)?.createdAt).getTime());
+
+            replies.forEach(reply => {
+              if (AppBskyFeedDefs.isThreadViewPost(reply)) {
+                const group = new GroupedPost();
+                group.thread.push(this.feedService.parseFeedViewPost({
+                  $type: 'app.bsky.feed.defs#feedViewPost',
+                  post: reply.post
+                }));
+
+                if (reply.replies) {
+                  const firstDeep = reply.replies
+                    .filter(reply => AppBskyFeedDefs.isThreadViewPost(reply))
+                    .sort((a, b) => b.post.likeCount - a.post.likeCount);
+
+                  if (firstDeep[0]) {
+                    group.thread.push(this.feedService.parseFeedViewPost({
+                      $type: 'app.bsky.feed.defs#feedViewPost',
+                      post: firstDeep[0].post
+                    }));
+
+                    if (firstDeep[0].replies) {
+                      const secondDeep = firstDeep[0].replies
+                        .filter(reply => AppBskyFeedDefs.isThreadViewPost(reply))
+                        .sort((a, b) => b.post.likeCount - a.post.likeCount);
+
+                      if (secondDeep[0]) {
+                        group.thread.push(this.feedService.parseFeedViewPost({
+                          $type: 'app.bsky.feed.defs#feedViewPost',
+                          post: secondDeep[0].post
+                        }));
+                      }
+                    }
+                  }
+                }
+
+                this.replies.update(replies => {
+                  replies.push(group);
+                  return replies;
+                })
+              }
+            });
           }
         }
       }, error: err => this.messageService.error(err.message)

@@ -27,7 +27,20 @@
       class="block p-3"
     />
 
-    <divider/>
+    @for (reply of replies(); track reply.uuid) {
+      <divider/>
+
+      @for (post of reply.thread; track post.uuid; let i = $index) {
+        <post-card
+          [post]="post.post()"
+          (postChange)="post.post.set($event)"
+          (click)="dialogService.openThread(post.post().uri)"
+          (onEmbedRecord)="dialogService.openRecord($event)"
+          class="cursor-pointer hover:bg-primary/2 w-full px-3 pt-3 pb-1"
+          [parent]="i !== reply.thread.length - 1"
+        />
+      }
+    }
   </div>
 } @else {
   <div
