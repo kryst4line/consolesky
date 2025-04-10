@@ -31,19 +31,20 @@
       class="relative w-full h-7 flex items-center px-2 bg-primary text-bg font-semibold cursor-default"
     >
       <span
+        class="shrink-0"
       >replying to</span>
 
       <span
-        class="ml-2"
+        class="ml-2 mr-auto grow-0 whitespace-nowrap overflow-hidden overflow-ellipsis break-words"
       >{{reply.author | displayName}}</span>
 
       <span
-        class="ml-auto font-semibold cursor-pointer hover:underline"
+        class="shrink-0 ml-6 font-semibold cursor-pointer hover:underline"
         (click)="showPopup() !== 'reply' ? showPopup.set('reply') : showPopup.set(undefined)"
       >{{ showPopup() == 'reply' ? 'hide post' : 'view post' }}</span>
 
       <span
-        class="ml-6 font-semibold cursor-pointer hover:underline"
+        class="shrink-0 ml-6 font-semibold cursor-pointer hover:underline"
         (click)="showPopup() == 'reply' ? showPopup.set(undefined) : undefined; postService.postCompose().reply.set(undefined)"
       >cancel</span>
     </div>
@@ -248,7 +249,7 @@
         <post-card
           [post]="reply"
           hideButtons
-          class="block w-[30rem] text-primary font-normal p-2"
+          class="block w-[30rem] max-h-[35rem] overflow-hidden text-primary font-normal p-2"
         />
       }
       @case ('media') {
