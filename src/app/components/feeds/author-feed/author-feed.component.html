@@ -6,16 +6,24 @@
   (scrollTop)="manageRefresh();"
 >
   @if (posts) {
-    @for (post of posts; track post.uuid) {
-      <post-card
-        [post]="post.post()"
-        [reply]="post.reply"
-        [reason]="post.reason"
-        (postChange)="post.post.set($event)"
-        (click)="dialogService.openThread(post.post().uri)"
-        (onEmbedRecord)="dialogService.openRecord($event)"
-        class="cursor-pointer hover:bg-primary/2 w-full py-3 px-2"
-      />
+    @for (group of posts; track group.uuid) {
+      @for (post of group.thread; track post.uuid; let i = $index) {
+        <post-card
+          [post]="post.post()"
+          [reply]="group.thread.length == 1 ? post.reply : undefined"
+          [reason]="post.reason"
+          (postChange)="post.post.set($event)"
+          (click)="dialogService.openThread(post.post().uri)"
+          (onEmbedRecord)="dialogService.openRecord($event)"
+          [parent]="group | postCardParentPipe: i"
+          [grandParent]="group | postCardGrandParentPipe: i"
+          class="cursor-pointer hover:bg-primary/2 w-full px-3 pb-1"
+          [ngClass]="{
+            'pt-3': i == 0,
+            'pt-2': i > 0
+          }"
+        />
+      }
 
       <divider/>
     }

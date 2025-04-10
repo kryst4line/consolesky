@@ -25,8 +25,7 @@
         />
       }
 
-      <divider
-      />
+      <divider/>
     }
 <!--  } @else {-->
 <!--    <div-->
@@ -40,24 +39,3 @@
 <!--    </div>-->
   }
 </div>
-
-<ng-template
-  #onePost
-  let-thread="thread"
->
-  <post-card
-    [post]="thread[0].post()"
-    [reply]="thread[0].reply"
-    [reason]="thread[0].reason"
-    (postChange)="thread[0].post.set($event)"
-    (click)="dialogService.openThread(thread[0].post().uri)"
-    (onEmbedRecord)="dialogService.openRecord($event)"
-    class="cursor-pointer hover:bg-primary/2 w-full px-3 pt-3 pb-1"
-  />
-</ng-template>
-
-<ng-template
-  #twoPosts
-  let-thread="thread"
->
-</ng-template>

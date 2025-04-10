@@ -157,8 +157,4 @@ export class TimelineFeedComponent implements OnInit, OnDestroy {
       this.initData();
     }
   }
-
-  log(obj: any) {
-    console.log(obj)
-  }
 }

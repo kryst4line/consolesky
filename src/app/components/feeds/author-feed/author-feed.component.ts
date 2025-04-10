@@ -14,13 +14,15 @@ import {ScrollDirective} from '@shared/directives/scroll.directive';
 import {$Typed} from '@atproto/api';
 import {ReasonRepost} from '@atproto/api/dist/client/types/app/bsky/feed/defs';
 import {PostService} from '@services/post.service';
-import {SignalizedFeedViewPost} from '@models/signalized-feed-view-post';
 import {from} from 'rxjs';
 import {PostCardComponent} from '@components/cards/post-card/post-card.component';
 import {MessageService} from '@services/message.service';
 import {DialogService} from '@services/dialog.service';
 import {DividerComponent} from '@components/shared/divider/divider.component';
 import {FeedService} from '@services/feed.service';
+import {GroupedPost} from '@models/grouped-post';
+import {PostCardGrandParentPipe} from '@shared/pipes/post-card-grandparent.pipe';
+import {PostCardParentPipe} from '@shared/pipes/post-card-parent.pipe';
 
 @Component({
   selector: 'author-feed',
@@ -29,6 +31,8 @@ import {FeedService} from '@services/feed.service';
     ScrollDirective,
     PostCardComponent,
     DividerComponent,
+    PostCardGrandParentPipe,
+    PostCardParentPipe,
   ],
   templateUrl: './author-feed.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
@@ -37,7 +41,7 @@ export class AuthorFeedComponent implements OnInit, OnDestroy {
   feed = viewChild<ElementRef>('feed');
   did = input.required<string>();
 
-  posts: SignalizedFeedViewPost[];
+  posts: GroupedPost[];
   cursor: string;
   loading = true;
   reloadReady = false;
@@ -75,11 +79,11 @@ export class AuthorFeedComponent implements OnInit, OnDestroy {
     this.loading = true;
     from(agent.getAuthorFeed({
       actor: this.did(),
-      limit: 15
+      limit: 50
     })).subscribe({
       next: response => {
         this.cursor = response.data.cursor;
-        this.posts = response.data.feed.map(fvp => this.feedService.parseFeedViewPost(fvp));
+        this.posts = this.feedService.groupFeedViewPosts(response.data.feed);
         this.cdRef.markForCheck();
         setTimeout(() => {
           this.loading = false;
@@ -96,11 +100,11 @@ export class AuthorFeedComponent implements OnInit, OnDestroy {
     from(agent.getAuthorFeed({
       actor: this.did(),
       cursor: this.cursor,
-      limit: 15
+      limit: 50
     })).subscribe({
       next: response => {
         this.cursor = response.data.cursor;
-        const newPosts = response.data.feed.map(fvp => this.feedService.parseFeedViewPost(fvp));
+        const newPosts = this.feedService.groupFeedViewPosts(response.data.feed);
         this.posts = [...this.posts, ...newPosts];
         this.cdRef.markForCheck();
         setTimeout(() => {
@@ -125,7 +129,7 @@ export class AuthorFeedComponent implements OnInit, OnDestroy {
           })).subscribe({
             next: response => {
               const post = response.data.feed[0];
-              const lastPost = this.posts[0];
+              const lastPost = this.posts[0].thread[this.posts[0].thread.length-1];
               let isNewPost = false;
 
               if (post) {
