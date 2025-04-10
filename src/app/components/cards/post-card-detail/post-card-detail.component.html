@@ -39,19 +39,19 @@
     <avatar
       [src]="author.avatar"
       (click)="$event.stopPropagation()"
-      class="h-12 w-12 shrink-0"
+      class="h-12 w-12 shrink-0 cursor-pointer"
     />
 
     <div
-      class="flex flex-col flex-1 justify-center"
+      class="flex flex-col flex-1 min-w-0 justify-center"
     >
       <span
-        class="text-lg font-bold [text-box:trim-both_cap_alphabetic] min-w-0 overflow-y-visible overflow-x-clip overflow-ellipsis whitespace-nowrap"
+        class="text-lg font-bold [text-box:trim-both_cap_alphabetic] w-fit min-w-0 overflow-y-visible overflow-x-clip overflow-ellipsis whitespace-nowrap cursor-pointer"
       >{{author | displayName}}</span>
 
       @if (author.displayName?.trim().length) {
         <span
-          class="text-sm text-primary/50 [text-box:trim-both_cap_alphabetic] mt-3 min-w-0 overflow-y-visible overflow-x-clip whitespace-nowrap text-ellipsis"
+          class="text-sm text-primary/50 [text-box:trim-both_cap_alphabetic] mt-3 w-fit min-w-0 overflow-y-visible overflow-x-clip whitespace-nowrap text-ellipsis cursor-pointer"
         >{{'@' + author.handle}}</span>
       }
     </div>
@@ -78,7 +78,7 @@
   @if (embed | isEmbedRecordView) {
     <record-embed
       [record]="embed.record"
-      class="mt-3 p-3 hover:bg-primary/2"
+      class="mt-3 p-3 hover:bg-primary/2 cursor-pointer"
     />
   }
 
@@ -128,7 +128,7 @@
 
     <record-embed
       [record]="embed.record.record"
-      class="mt-2 p-2 hover:bg-primary/2"
+      class="mt-2 p-2 hover:bg-primary/2 cursor-pointer"
     />
   }
 </ng-template>
