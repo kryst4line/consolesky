@@ -20,6 +20,7 @@ import {NotificationCardComponent} from '@components/cards/notification-card/not
 import {MessageService} from '@services/message.service';
 import {DividerComponent} from '@components/shared/divider/divider.component';
 import {DialogService} from '@services/dialog.service';
+import {SpinnerComponent} from '@components/shared/spinner/spinner.component';
 
 @Component({
   selector: 'notification-feed',
@@ -30,6 +31,7 @@ import {DialogService} from '@services/dialog.service';
     IsNotificationArrayPipe,
     NotificationCardComponent,
     DividerComponent,
+    SpinnerComponent,
   ],
   templateUrl: './notification-feed.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush

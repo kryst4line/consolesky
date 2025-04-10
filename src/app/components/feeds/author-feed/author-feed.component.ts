@@ -23,6 +23,7 @@ import {FeedService} from '@services/feed.service';
 import {GroupedPost} from '@models/grouped-post';
 import {PostCardGrandParentPipe} from '@shared/pipes/post-card-grandparent.pipe';
 import {PostCardParentPipe} from '@shared/pipes/post-card-parent.pipe';
+import {SpinnerComponent} from '@components/shared/spinner/spinner.component';
 
 @Component({
   selector: 'author-feed',
@@ -33,6 +34,7 @@ import {PostCardParentPipe} from '@shared/pipes/post-card-parent.pipe';
     DividerComponent,
     PostCardGrandParentPipe,
     PostCardParentPipe,
+    SpinnerComponent,
   ],
   templateUrl: './author-feed.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush

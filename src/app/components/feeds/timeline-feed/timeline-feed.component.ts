@@ -23,6 +23,7 @@ import {GroupedPost, GroupedPostOptions} from '@models/grouped-post';
 import {FeedService} from '@services/feed.service';
 import {PostCardGrandParentPipe} from '@shared/pipes/post-card-grandparent.pipe';
 import {PostCardParentPipe} from '@shared/pipes/post-card-parent.pipe';
+import {SpinnerComponent} from '@components/shared/spinner/spinner.component';
 
 @Component({
   selector: 'timeline-feed',
@@ -33,6 +34,7 @@ import {PostCardParentPipe} from '@shared/pipes/post-card-parent.pipe';
     DividerComponent,
     PostCardGrandParentPipe,
     PostCardParentPipe,
+    SpinnerComponent,
   ],
   templateUrl: './timeline-feed.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush

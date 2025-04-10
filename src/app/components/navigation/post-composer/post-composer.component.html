@@ -178,6 +178,7 @@
         <button
           class="btn-secondary h-9 flex-1 border-0 p-0 flex items-center justify-center"
           (click)="uploader.click()"
+          [disabled]="(mediaEmbed | isMediaEmbedImage) ? mediaEmbed.images.length == 4 : mediaEmbed"
         >
           <span
             class="material-icons-outlined !text-xl"
@@ -223,7 +224,13 @@
         class="btn-primary font-semibold h-16 w-full border-0 border-l"
         [disabled]="loading || text.innerText.length > 300 || (!text.innerText.length && !mediaEmbed && !recordEmbed)"
         (click)="publishPost()"
-      >post</button>
+      >post
+        @if (loading) {
+          <spinner
+            class="absolute ml-2 mt-0.5"
+          />
+        }
+      </button>
     </div>
   </div>
 </div>

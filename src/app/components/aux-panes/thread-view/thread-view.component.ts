@@ -21,6 +21,7 @@ import {PostCardComponent} from '@components/cards/post-card/post-card.component
 import {DialogService} from '@services/dialog.service';
 import {NgTemplateOutlet} from '@angular/common';
 import {DividerComponent} from '@components/shared/divider/divider.component';
+import {SpinnerComponent} from '@components/shared/spinner/spinner.component';
 
 @Component({
   selector: 'thread-view',
@@ -30,7 +31,8 @@ import {DividerComponent} from '@components/shared/divider/divider.component';
     IsFeedDefsBlockedPostPipe,
     PostCardComponent,
     NgTemplateOutlet,
-    DividerComponent
+    DividerComponent,
+    SpinnerComponent
   ],
   templateUrl: './thread-view.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush

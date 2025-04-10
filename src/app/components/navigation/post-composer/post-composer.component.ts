@@ -32,6 +32,7 @@ import {IsGraphDefsListViewPipe} from '@shared/pipes/type-guards/is-graph-defs-l
 import {IsGraphDefsStarterPackViewPipe} from '@shared/pipes/type-guards/is-graph-defs-starterpack-view';
 import {ExternalEmbedComponent} from '@components/embeds/external-embed/external-embed.component';
 import {MessageService} from '@services/message.service';
+import {SpinnerComponent} from '@components/shared/spinner/spinner.component';
 
 @Component({
   selector: 'post-composer',
@@ -51,7 +52,8 @@ import {MessageService} from '@services/message.service';
     IsFeedDefsGeneratorViewPipe,
     IsGraphDefsListViewPipe,
     IsGraphDefsStarterPackViewPipe,
-    ExternalEmbedComponent
+    ExternalEmbedComponent,
+    SpinnerComponent
   ],
   templateUrl: './post-composer.component.html',
   styles: `
