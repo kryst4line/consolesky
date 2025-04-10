@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, Component} from '@angular/core';
+import {ChangeDetectionStrategy, Component, HostListener} from '@angular/core';
 import {SidebarComponent} from '@components/navigation/sidebar/sidebar.component';
 import {DeckComponent} from '@components/navigation/deck/deck.component';
 import {PostComposerComponent} from '@components/navigation/post-composer/post-composer.component';
@@ -20,4 +20,11 @@ export class DashboardComponent {
   constructor(
     protected postService: PostService
   ) {}
+
+  @HostListener('window:keydown.control.enter', ['$event'])
+  openComposer() {
+    if (!this.postService.postCompose()) {
+      this.postService.createPost();
+    }
+  }
 }
