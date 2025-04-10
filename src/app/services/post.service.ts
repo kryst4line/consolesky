@@ -50,6 +50,9 @@ export class PostService {
     if (this.postCompose()) return;
 
     this.postCompose.set(new PostCompose());
+    setTimeout(() => {
+      document.getElementById('composer-input').focus();
+    }, 50);
   }
 
   like(post: WritableSignal<AppBskyFeedDefs.PostView>): Promise<void> {
@@ -201,7 +204,13 @@ export class PostService {
   }
 
   replyPost(uri: string) {
-    if (!this.postCompose()) this.createPost();
+    if (!this.postCompose()) {
+      this.createPost();
+    } else {
+      setTimeout(() => {
+        document.getElementById('composer-input').focus();
+      }, 50);
+    }
 
     agent.getPostThread({
       uri: uri
@@ -243,7 +252,13 @@ export class PostService {
   }
 
   quotePost(uri:string) {
-    if (!this.postCompose()) this.createPost();
+    if (!this.postCompose()) {
+      this.createPost();
+    } else {
+      setTimeout(() => {
+        document.getElementById('composer-input').focus();
+      }, 50);
+    }
 
     agent.getPosts({
       uris: [uri]

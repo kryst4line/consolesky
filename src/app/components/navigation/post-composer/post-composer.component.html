@@ -57,13 +57,15 @@
       [class.relative]="!showDragOver()"
     >
       <div
-        #text autofocus
+        #text
+        id="composer-input"
         contenteditable="plaintext-only"
         spellcheck="false"
         class="absolute top-0 left-0 z-1 w-full h-full p-2 bg-transparent text-transparent outline-0 caret-black"
         (input)="formatText($event)"
         (paste)="postService.attachMedia($any($event.clipboardData.files))"
         (keydown.control.enter)="postBtn.click()"
+        (keydown.escape)="postService.postCompose.set(undefined)"
         [mention]="mentionItems"
         [mentionConfig]="{
           triggerChar: '@',
