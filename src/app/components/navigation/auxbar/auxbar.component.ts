@@ -7,8 +7,9 @@ import {LoggerComponent} from '@components/shared/logger/logger.component';
 import {DialogService} from '@services/dialog.service';
 import {IsAuxPaneThreadPipe} from '@shared/pipes/type-guards/is-auxpane-thread';
 import {ThreadViewComponent} from '@components/aux-panes/thread-view/thread-view.component';
-import {NgClass, NgTemplateOutlet} from '@angular/common';
+import {NgClass, NgTemplateOutlet, SlicePipe} from '@angular/common';
 import {MessageService} from '@services/message.service';
+import {CdkConnectedOverlay} from '@angular/cdk/overlay';
 
 @Component({
   selector: 'auxbar',
@@ -17,13 +18,16 @@ import {MessageService} from '@services/message.service';
     IsAuxPaneThreadPipe,
     ThreadViewComponent,
     NgTemplateOutlet,
-    NgClass
+    NgClass,
+    CdkConnectedOverlay,
+    SlicePipe,
   ],
   templateUrl: './auxbar.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class AuxbarComponent {
   topics = signal<AppBskyUnspeccedDefs.TrendingTopic[]>([]);
+  showDropdown = signal(false);
 
   constructor(
     protected dialogService: DialogService,

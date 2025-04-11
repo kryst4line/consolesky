@@ -3,6 +3,7 @@
   [class.!w-lg]="dialogService.auxPanes().length"
 >
   <div
+    #topBar
     class="flex h-9 w-full shrink-0"
     [ngClass]="{'border-b border-primary': dialogService.auxPanes().length}"
   >
@@ -13,6 +14,7 @@
           class="btn-primary border-b-0 font-black text-lg"
         ><</button>
       }
+
       <span
         class="bg-primary text-bg text-xl font-medium flex items-center pr-3"
         [ngClass]="{
@@ -20,17 +22,49 @@
           'pl-3': !dialogService.auxPanes()[0].children.length,
         }"
       >thread view</span>
+
+      @if (dialogService.auxPanes().length > 1) {
+        <button
+          (click)="showDropdown.set(!showDropdown())"
+          [class.active]="showDropdown()"
+          class="h-9 w-9 text-xl font-semibold border border-primary hover:bg-primary/10 cursor-pointer"
+        >
+        <span
+          class="material-icons !text-xl translate-y-[0.15rem]"
+        >menu</span>
+        </button>
+      }
+
       <button
         (click)="dialogService.closeAuxPane(); cdRef.markForCheck()"
-        class="h-9 w-9 text-xl font-bold border border-primary hover:bg-primary/10 cursor-pointer"
+        class="h-9 w-9 text-2xl font-semibold border border-primary hover:bg-primary/10 cursor-pointer ml-auto"
       >x</button>
-
-      <span
-        (click)="dialogService.auxPanes.set([])"
-        class="text-primary font-semibold flex items-center px-3 hover:underline cursor-pointer ml-auto"
-      >close all</span>
     }
   </div>
+
+  <ng-template
+    cdkConnectedOverlay
+    [cdkConnectedOverlayOrigin]="topBar"
+    [cdkConnectedOverlayOpen]="showDropdown()"
+    (detach)="showDropdown.set(false)"
+    (overlayOutsideClick)="showDropdown.set(!showDropdown())"
+  >
+    <ul role="listbox" class="border border-primary bg-bg">
+      @for (pane of dialogService.auxPanes() | slice: 1; track pane.uuid; let i = $index) {
+        <li>
+          <button
+            (click)="dialogService.reorderAuxPane(pane.uuid); showDropdown.set(false)"
+            class="btn-dropdown"
+          >
+            @if (pane | isAuxPaneThread) {
+              thread
+            }
+          </button>
+        </li>
+      }
+    </ul>
+  </ng-template>
+
   <div
     class="relative flex flex-col flex-1 min-h-0 min-w-0 border-l border-primary"
   >
@@ -68,7 +102,7 @@
   @for (pane of dialogService.auxPanes(); track pane.uuid; let iPane = $index) {
     <div
       class="absolute h-full w-full bg-bg"
-      [class.hidden]="pane.children.length || iPane"
+      [class.hidden]="iPane"
     >
       @if (pane.children.length) {
         @for (child of pane.children; track child.uuid; let iChild = $index) {
@@ -83,6 +117,7 @@
       @if (pane | isAuxPaneThread) {
         <thread-view
           [uri]="pane.uri"
+          [class.hidden]="pane.children.length"
         />
       }
     </div>

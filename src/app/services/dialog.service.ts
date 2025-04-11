@@ -3,6 +3,7 @@ import {Dialog} from '@angular/cdk/dialog';
 import {GalleryComponent} from '@components/dialogs/gallery/gallery.component';
 import {AppBskyEmbedImages, AppBskyEmbedRecord} from '@atproto/api';
 import {AuxPane, ThreadAuxPane} from '@models/aux-pane';
+import {moveItemInArray} from '@angular/cdk/drag-drop';
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +19,13 @@ export class DialogService {
     this.dialog.open(GalleryComponent, {
       data: {images: images, index: index},
       hasBackdrop: true
+    });
+  }
+
+  reorderAuxPane(uuid: string) {
+    this.auxPanes.update(panes => {
+      moveItemInArray(panes, panes.findIndex(p => p.uuid == uuid), 0);
+      return panes;
     });
   }
 
