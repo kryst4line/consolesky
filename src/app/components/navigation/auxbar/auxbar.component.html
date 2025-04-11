@@ -7,13 +7,23 @@
     [ngClass]="{'border-b border-primary': dialogService.auxPanes().length}"
   >
     @if (dialogService.auxPanes().length) {
+      @if (dialogService.auxPanes()[0].children.length) {
+        <button
+          (click)="dialogService.closeAuxPaneChildren()"
+          class="btn-primary border-b-0 font-black text-lg"
+        ><</button>
+      }
       <span
-        class="bg-primary text-bg text-xl font-medium flex items-center px-3"
+        class="bg-primary text-bg text-xl font-medium flex items-center pr-3"
+        [ngClass]="{
+          'pl-2': dialogService.auxPanes()[0].children.length,
+          'pl-3': !dialogService.auxPanes()[0].children.length,
+        }"
       >thread view</span>
-      <span
-        (click)="closePane()"
-        class="text-primary font-semibold flex items-center px-3 hover:underline cursor-pointer"
-      >close</span>
+      <button
+        (click)="dialogService.closeAuxPane(); cdRef.markForCheck()"
+        class="h-9 w-9 text-xl font-bold border border-primary hover:bg-primary/10 cursor-pointer"
+      >x</button>
 
       <span
         (click)="dialogService.auxPanes.set([])"
@@ -55,10 +65,21 @@
 <ng-template
   #auxPane
 >
-  @for (pane of dialogService.auxPanes(); track $index) {
+  @for (pane of dialogService.auxPanes(); track pane.uuid; let iPane = $index) {
     <div
       class="absolute h-full w-full bg-bg"
+      [class.hidden]="pane.children.length || iPane"
     >
+      @if (pane.children.length) {
+        @for (child of pane.children; track child.uuid; let iChild = $index) {
+          @if (child | isAuxPaneThread) {
+            <thread-view
+              [uri]="child.uri"
+              [class.hidden]="iChild"
+            />
+          }
+        }
+      }
       @if (pane | isAuxPaneThread) {
         <thread-view
           [uri]="pane.uri"

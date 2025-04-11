@@ -29,7 +29,7 @@ export class AuxbarComponent {
     protected dialogService: DialogService,
     private messageService: MessageService,
     private authService: AuthService,
-    private cdRef: ChangeDetectorRef
+    protected cdRef: ChangeDetectorRef
   ) {
     this.loadTopics();
   }
@@ -43,13 +43,6 @@ export class AuxbarComponent {
         this.topics.set(response.data.topics);
         this.cdRef.markForCheck();
       }, error: err => this.messageService.error(err.message)
-    });
-  }
-
-  closePane() {
-    this.dialogService.auxPanes.update(panes => {
-      panes.pop();
-      return panes;
     });
   }
 }

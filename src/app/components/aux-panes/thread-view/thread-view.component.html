@@ -13,8 +13,8 @@
         <post-card
           [post]="parent()"
           (postChange)="parent.set($event)"
-          (click)="dialogService.openThread(parent().uri)"
-          (onEmbedRecord)="dialogService.openRecord($event)"
+          (click)="dialogService.openThread(parent().uri, true)"
+          (onEmbedRecord)="dialogService.openRecord($event, true)"
           class="cursor-pointer hover:bg-primary/2 w-full px-3 pt-3 pb-1"
           parent
         />
@@ -30,12 +30,12 @@
     @for (reply of replies(); track reply.uuid) {
       <divider/>
 
-      @for (post of reply.thread; track post.uuid; let i = $index) {
+      @for (child of reply.thread; track child.uuid; let i = $index) {
         <post-card
-          [post]="post.post()"
-          (postChange)="post.post.set($event)"
-          (click)="dialogService.openThread(post.post().uri)"
-          (onEmbedRecord)="dialogService.openRecord($event)"
+          [post]="child.post()"
+          (postChange)="child.post.set($event)"
+          (click)="dialogService.openThread(child.post().uri, true)"
+          (onEmbedRecord)="dialogService.openRecord($event, true)"
           class="cursor-pointer hover:bg-primary/2 w-full px-3 pt-3 pb-1"
           [parent]="i !== reply.thread.length - 1"
         />

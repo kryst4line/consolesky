@@ -82,18 +82,6 @@ export class ThreadViewComponent implements OnInit {
             this.parents.set(parents);
           }
 
-          this.loadReady.set(true);
-          this.cdRef.markForCheck();
-
-          if (thread.parent) {
-            setTimeout(() => {
-              this.scroll().nativeElement.scrollTo({
-                top: this.mainCard().nativeElement.offsetTop,
-                behavior: 'smooth'
-              });
-            }, 50);
-          }
-
           //Set grouped replies
           if (thread.replies) {
             const replies = thread.replies
@@ -140,6 +128,18 @@ export class ThreadViewComponent implements OnInit {
                 })
               }
             });
+          }
+
+          this.loadReady.set(true);
+          this.cdRef.markForCheck();
+
+          if (thread.parent) {
+            setTimeout(() => {
+              this.scroll().nativeElement.scrollTo({
+                top: this.mainCard().nativeElement.offsetTop,
+                behavior: 'smooth'
+              });
+            }, 50);
           }
         }
       }, error: err => this.messageService.error(err.message)

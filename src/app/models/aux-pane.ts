@@ -1,4 +1,8 @@
+import * as uuid from "uuid";
+
 export class AuxPane {
+  uuid: string = uuid.v4();
+  children: Partial<AuxPane>[] = [];
 }
 
 export class ThreadAuxPane extends AuxPane {

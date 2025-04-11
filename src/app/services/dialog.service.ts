@@ -21,7 +21,21 @@ export class DialogService {
     });
   }
 
-  openThread(uri: string) {
+  closeAuxPane() {
+    this.auxPanes.update(panes => {
+      panes.shift();
+      return panes;
+    })
+  }
+
+  closeAuxPaneChildren() {
+    this.auxPanes.update(panes => {
+      panes[0].children.shift();
+      return panes;
+    })
+  }
+
+  openThread(uri: string, children?: boolean) {
     // Cancel action if user is selecting text
     if (window.getSelection().toString().length) return;
     // Cancel action if post is the same than the last opened thread
@@ -37,15 +51,23 @@ export class DialogService {
 
     const pane = new ThreadAuxPane();
     pane.uri = uri;
-    this.auxPanes.update(panes => {
-      return [...panes, pane];
-    });
+
+    if (children) {
+      this.auxPanes.update(panes => {
+        panes[0].children.unshift(pane);
+        return panes;
+      });
+    } else {
+      this.auxPanes.update(panes => {
+        return [pane, ...panes];
+      });
+    }
   }
 
-  openRecord(record: AppBskyEmbedRecord.View) {
+  openRecord(record: AppBskyEmbedRecord.View, children?: boolean) {
     switch (record.record.$type) {
       case 'app.bsky.embed.record#viewRecord':
-        this.openThread((record.record as AppBskyEmbedRecord.ViewRecord).uri);
+        this.openThread((record.record as AppBskyEmbedRecord.ViewRecord).uri, children);
         break;
       case 'app.bsky.graph.defs#listView':
         break;
