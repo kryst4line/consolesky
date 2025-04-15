@@ -29,7 +29,6 @@ export class DeckComponent {
   columns: WritableSignal<Partial<DeckColumn>[]>;
 
   constructor(
-    // protected postService: PostService,
     private columnService: ColumnService,
   ) {
     this.columns = columnService.getColumns();

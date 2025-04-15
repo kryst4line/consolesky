@@ -2,7 +2,7 @@ import {Injectable, signal} from '@angular/core';
 import {Dialog} from '@angular/cdk/dialog';
 import {GalleryComponent} from '@components/dialogs/gallery/gallery.component';
 import {AppBskyEmbedImages, AppBskyEmbedRecord} from '@atproto/api';
-import {AuxPane, ThreadAuxPane} from '@models/aux-pane';
+import {AuthorAuxPane, AuxPane, ThreadAuxPane} from '@models/aux-pane';
 import {moveItemInArray} from '@angular/cdk/drag-drop';
 
 @Injectable({
@@ -59,6 +59,29 @@ export class DialogService {
 
     const pane = new ThreadAuxPane();
     pane.uri = uri;
+
+    if (children) {
+      this.auxPanes.update(panes => {
+        panes[0].children.unshift(pane);
+        return panes;
+      });
+    } else {
+      this.auxPanes.update(panes => {
+        return [pane, ...panes];
+      });
+    }
+  }
+
+  openAuthor(did: string, children?: boolean) {
+    // Cancel action if user is selecting text
+    if (window.getSelection().toString().length) return;
+    // Mute all video players on auxbar
+    document.querySelector('auxbar').querySelectorAll('video').forEach((video: HTMLVideoElement) => {
+      video.muted = true;
+    });
+
+    const pane = new AuthorAuxPane();
+    pane.did = did;
 
     if (children) {
       this.auxPanes.update(panes => {

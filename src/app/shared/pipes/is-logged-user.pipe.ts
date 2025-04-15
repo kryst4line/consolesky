@@ -1,11 +1,12 @@
 import {Pipe, PipeTransform} from '@angular/core';
-import {AppBskyActorDefs} from "@atproto/api";
+import {AuthService} from '@core/auth/auth.service';
 
 @Pipe({
   name: 'isLoggedUser'
 })
 export class IsLoggedUserPipe implements PipeTransform {
-  transform(did: string, loggedUser: AppBskyActorDefs.ProfileViewDetailed): boolean {
-    return did == loggedUser.did;
+  constructor(private authService: AuthService) {}
+  transform(author: Partial<{did: string}>): boolean {
+    return author.did == this.authService.loggedUser().did;
   }
 }

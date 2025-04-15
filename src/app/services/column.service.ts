@@ -22,6 +22,7 @@ export class ColumnService {
   }
 
   public updateColumn(column: Partial<DeckColumn>) {
+    console.log(column);
     columns.update(columns => {
       columns[columns.findIndex(col => col.uuid == column.uuid)] = column;
       return columns;

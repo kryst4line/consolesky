@@ -10,6 +10,8 @@ import {ThreadViewComponent} from '@components/aux-panes/thread-view/thread-view
 import {NgClass, NgTemplateOutlet, SlicePipe} from '@angular/common';
 import {MessageService} from '@services/message.service';
 import {CdkConnectedOverlay} from '@angular/cdk/overlay';
+import {IsAuxPaneAuthorPipe} from '@shared/pipes/type-guards/is-auxpane-author';
+import {AuthorViewComponent} from '@components/aux-panes/author-view/author-view.component';
 
 @Component({
   selector: 'auxbar',
@@ -21,6 +23,8 @@ import {CdkConnectedOverlay} from '@angular/cdk/overlay';
     NgClass,
     CdkConnectedOverlay,
     SlicePipe,
+    IsAuxPaneAuthorPipe,
+    AuthorViewComponent,
   ],
   templateUrl: './auxbar.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush

@@ -1,7 +1,7 @@
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  Component,
+  Component, effect,
   ElementRef,
   input,
   OnDestroy,
@@ -55,7 +55,11 @@ export class TimelineFeedComponent implements OnInit, OnDestroy {
     private messageService: MessageService,
     protected dialogService: DialogService,
     public cdRef: ChangeDetectorRef
-  ) {}
+  ) {
+    effect(() => {
+      if (this.groupedPostOptions) this.initData();
+    })
+  }
 
   ngOnInit() {
     this.initData();
@@ -83,6 +87,7 @@ export class TimelineFeedComponent implements OnInit, OnDestroy {
       limit: 50
     })).subscribe({
       next: response => {
+        this.feed().nativeElement.scrollTo({top:0});
         this.cursor = response.data.cursor;
         this.posts = this.feedService.groupFeedViewPosts(response.data.feed, this.groupedPostOptions());
         this.cdRef.markForCheck();
@@ -158,5 +163,12 @@ export class TimelineFeedComponent implements OnInit, OnDestroy {
       this.reloadReady = false;
       this.initData();
     }
+  }
+
+  scrollToTop() {
+    this.feed().nativeElement.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
   }
 }

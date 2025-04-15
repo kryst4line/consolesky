@@ -8,6 +8,6 @@ export class GroupedPost {
 
 export class GroupedPostOptions {
   hideReplies?: boolean = false;
-  hideUnfollowedReplies?: boolean = false;
+  hideUnfollowedReplies?: boolean = true;
   hideReposts?: boolean = false;
 }

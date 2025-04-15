@@ -2,6 +2,7 @@ import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
   Component,
+  effect,
   ElementRef,
   input,
   OnDestroy,
@@ -42,6 +43,12 @@ import {SpinnerComponent} from '@components/shared/spinner/spinner.component';
 export class AuthorFeedComponent implements OnInit, OnDestroy {
   feed = viewChild<ElementRef>('feed');
   did = input.required<string>();
+  filter = input<
+    | 'posts_with_replies'
+    | 'posts_no_replies'
+    | 'posts_with_media'
+    | 'posts_and_author_threads'
+    | 'posts_with_video'>('posts_no_replies');
 
   posts: GroupedPost[];
   cursor: string;
@@ -55,7 +62,14 @@ export class AuthorFeedComponent implements OnInit, OnDestroy {
     protected dialogService: DialogService,
     private messageService: MessageService,
     private cdRef: ChangeDetectorRef
-  ) {}
+  ) {
+    effect(() => {
+      if (this.filter()) {
+        this.initData();
+      }
+    })
+
+  }
 
   ngOnInit() {
     this.initData();
@@ -81,9 +95,11 @@ export class AuthorFeedComponent implements OnInit, OnDestroy {
     this.loading = true;
     from(agent.getAuthorFeed({
       actor: this.did(),
-      limit: 50
+      filter: this.filter(),
+      limit: 25
     })).subscribe({
       next: response => {
+        this.feed().nativeElement.scrollTo({top:0});
         this.cursor = response.data.cursor;
         this.posts = this.feedService.groupFeedViewPosts(response.data.feed);
         this.cdRef.markForCheck();
@@ -101,8 +117,9 @@ export class AuthorFeedComponent implements OnInit, OnDestroy {
 
     from(agent.getAuthorFeed({
       actor: this.did(),
+      filter: this.filter(),
       cursor: this.cursor,
-      limit: 50
+      limit: 25
     })).subscribe({
       next: response => {
         this.cursor = response.data.cursor;
@@ -161,5 +178,12 @@ export class AuthorFeedComponent implements OnInit, OnDestroy {
       this.reloadReady = false;
       this.initData();
     }
+  }
+
+  scrollToTop() {
+    this.feed().nativeElement.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
   }
 }

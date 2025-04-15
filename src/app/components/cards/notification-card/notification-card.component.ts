@@ -48,6 +48,7 @@ export class NotificationCardComponent implements OnInit {
   openAuthor(event: Event, did: string) {
     //TODO: OpenAuthor
     event.stopPropagation();
+    this.dialogService.openAuthor(did);
   }
 
   openImage(event: Event, images: AppBskyEmbedImages.ViewImage[], index: number) {

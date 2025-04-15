@@ -1,14 +1,16 @@
 import * as uuid from "uuid";
+import {GroupedPostOptions} from '@models/grouped-post';
 
 export class DeckColumn {
   uuid: string = uuid.v4();
   title: string = '';
-  width: number = 400;
+  width: number = 350;
   index: number;
 }
 
 export class TimelineDeckColumn extends DeckColumn {
   type: DeckColumnType.TIMELINE = DeckColumnType.TIMELINE;
+  options: GroupedPostOptions = new GroupedPostOptions();
 }
 
 export class NotificationDeckColumn extends DeckColumn {

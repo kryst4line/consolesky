@@ -5,13 +5,15 @@
     class="flex h-9 w-full border-b shrink-0"
   >
     <span
-      class="bg-primary text-bg text-xl font-medium flex items-center px-3 lowercase font-mono"
+      (click)="feed.scrollToTop()"
+      class="bg-primary text-bg text-xl font-medium flex items-center px-3 lowercase font-mono cursor-pointer"
     >{{column().title}}</span>
   </div>
   <div
     class="flex-1 min-h-0"
   >
     <notification-feed
+      #feed
       class="block h-full"
     />
   </div>

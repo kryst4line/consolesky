@@ -91,7 +91,7 @@
     class="relative h-0 w-full"
   >
     <logger
-      class="absolute bottom-0 left-0 w-full"
+      class="absolute bottom-0 left-0 w-full z-"
     />
   </div>
 </div>
@@ -117,6 +117,11 @@
       @if (pane | isAuxPaneThread) {
         <thread-view
           [uri]="pane.uri"
+          [class.hidden]="pane.children.length"
+        />
+      } @else if (pane | isAuxPaneAuthor) {
+        <author-view
+          [did]="pane.did"
           [class.hidden]="pane.children.length"
         />
       }

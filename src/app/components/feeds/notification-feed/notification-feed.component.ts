@@ -148,4 +148,11 @@ export class NotificationFeedComponent implements OnInit, OnDestroy {
       this.dialogService.openThread(notification.uri)
     }
   }
+
+  scrollToTop() {
+    this.feed().nativeElement.scrollTo({
+      top: 0,
+      behavior: 'smooth'
+    });
+  }
 }

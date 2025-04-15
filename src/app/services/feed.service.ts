@@ -52,7 +52,7 @@ export class FeedService {
         return !!actor.viewer.following;
       }
 
-      if (options?.hideUnfollowedReplies && !followedUser(parent?.author)) continue;
+      if (feedView.post.author.did !== this.authService.loggedUser().did && options?.hideUnfollowedReplies && (parent && !followedUser(parent.author))) continue;
 
       const post = this.parseFeedViewPost(feedView);
       group.thread.push(post);
