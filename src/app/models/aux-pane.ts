@@ -2,19 +2,28 @@ import * as uuid from "uuid";
 
 export class AuxPane {
   uuid: string = uuid.v4();
-  children: Partial<AuxPane>[] = [];
 }
 
 export class ThreadAuxPane extends AuxPane {
   type: AuxPaneType.THREAD = AuxPaneType.THREAD;
   uri: string;
+
+  constructor(uri: string) {
+    super();
+    this.uri = uri;
+  }
 }
 
 export class AuthorAuxPane extends AuxPane {
   type: AuxPaneType.AUTHOR = AuxPaneType.AUTHOR;
   did: string;
   handle: string;
-  displayName: string;
+
+  constructor(author: Partial<{did: string, handle: string}>) {
+    super();
+    this.did = author.did;
+    this.handle = author.handle;
+  }
 }
 
 export class ListAuxPane extends AuxPane {

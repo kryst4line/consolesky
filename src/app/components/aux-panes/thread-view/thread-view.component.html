@@ -13,8 +13,8 @@
         <post-card
           [post]="parent()"
           (postChange)="parent.set($event)"
-          (click)="dialogService.openThread(parent().uri, true)"
-          (onEmbedRecord)="dialogService.openRecord($event, true)"
+          (click)="dialogService.openThread(parent().uri)"
+          (onEmbedRecord)="dialogService.openRecord($event)"
           class="cursor-pointer hover:bg-primary/2 w-full px-3 pt-3 pb-1"
           parent
         />
@@ -34,8 +34,8 @@
         <post-card
           [post]="child.post()"
           (postChange)="child.post.set($event)"
-          (click)="dialogService.openThread(child.post().uri, true)"
-          (onEmbedRecord)="dialogService.openRecord($event, true)"
+          (click)="dialogService.openThread(child.post().uri)"
+          (onEmbedRecord)="dialogService.openRecord($event)"
           class="cursor-pointer hover:bg-primary/2 w-full px-3 pt-3 pb-1"
           [parent]="i !== reply.thread.length - 1"
         />

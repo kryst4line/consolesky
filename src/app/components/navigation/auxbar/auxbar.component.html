@@ -8,19 +8,15 @@
     [ngClass]="{'border-b border-primary': dialogService.auxPanes().length}"
   >
     @if (dialogService.auxPanes().length) {
-      @if (dialogService.auxPanes()[0].children.length) {
+      @if (dialogService.auxPanes().length > 1) {
         <button
-          (click)="dialogService.closeAuxPaneChildren()"
+          (click)="dialogService.closeAuxPane()"
           class="btn-primary border-b-0 font-black text-lg"
         ><</button>
       }
 
       <span
-        class="bg-primary text-bg text-xl font-medium flex items-center pr-3"
-        [ngClass]="{
-          'pl-2': dialogService.auxPanes()[0].children.length,
-          'pl-3': !dialogService.auxPanes()[0].children.length,
-        }"
+        class="bg-primary text-bg text-xl font-medium flex items-center p-3"
       >thread view</span>
 
       @if (dialogService.auxPanes().length > 1) {
@@ -36,7 +32,7 @@
       }
 
       <button
-        (click)="dialogService.closeAuxPane(); cdRef.markForCheck()"
+        (click)="dialogService.auxPanes.set([])"
         class="h-9 w-9 text-2xl font-semibold border border-primary hover:bg-primary/10 cursor-pointer ml-auto"
       >x</button>
     }
@@ -58,6 +54,9 @@
           >
             @if (pane | isAuxPaneThread) {
               thread
+            }
+            @if (pane | isAuxPaneAuthor) {
+              {{'@' + pane.handle}}
             }
           </button>
         </li>
@@ -99,30 +98,18 @@
 <ng-template
   #auxPane
 >
-  @for (pane of dialogService.auxPanes(); track pane.uuid; let iPane = $index) {
+  @for (pane of dialogService.auxPanes(); track pane.uuid; let i = $index) {
     <div
       class="absolute h-full w-full bg-bg"
-      [class.hidden]="iPane"
+      [class.hidden]="i"
     >
-      @if (pane.children.length) {
-        @for (child of pane.children; track child.uuid; let iChild = $index) {
-          @if (child | isAuxPaneThread) {
-            <thread-view
-              [uri]="child.uri"
-              [class.hidden]="iChild"
-            />
-          }
-        }
-      }
       @if (pane | isAuxPaneThread) {
         <thread-view
           [uri]="pane.uri"
-          [class.hidden]="pane.children.length"
         />
       } @else if (pane | isAuxPaneAuthor) {
         <author-view
           [did]="pane.did"
-          [class.hidden]="pane.children.length"
         />
       }
     </div>

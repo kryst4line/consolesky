@@ -45,10 +45,9 @@ export class NotificationCardComponent implements OnInit {
     this.cdRef.markForCheck();
   }
 
-  openAuthor(event: Event, did: string) {
-    //TODO: OpenAuthor
+  openAuthor(event: Event, author: Partial<{did: string, handle: string}>) {
     event.stopPropagation();
-    this.dialogService.openAuthor(did);
+    this.dialogService.openAuthor(author);
   }
 
   openImage(event: Event, images: AppBskyEmbedImages.ViewImage[], index: number) {

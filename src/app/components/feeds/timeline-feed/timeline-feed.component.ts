@@ -1,7 +1,8 @@
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
-  Component, effect,
+  Component,
+  effect,
   ElementRef,
   input,
   OnDestroy,

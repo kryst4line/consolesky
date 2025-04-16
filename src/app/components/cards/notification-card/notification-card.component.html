@@ -70,12 +70,12 @@
   >
     @for (author of notification().authors | slice : 0: 5; track author.did) {
       <a
-        (click)="openAuthor($event, author.did)"
+        (click)="openAuthor($event, author)"
         class="h-8 w-8 relative cursor-pointer"
       >
         <avatar
           [src]="author.avatar"
-          (click)="openAuthor($event, author.did)"
+          (click)="openAuthor($event, author)"
         />
       </a>
     }
@@ -97,26 +97,26 @@
     @switch (notification().authors.length) {
       @case (1) {
         <a
-          (click)="openAuthor($event, notification().authors[0].did)"
+          (click)="openAuthor($event, notification().authors[0])"
           class="font-bold hover:underline cursor-pointer"
         >{{notification().authors[0] | displayName}}</a>
       }
       @case (2) {
         <a
-          (click)="openAuthor($event, notification().authors[0].did)"
+          (click)="openAuthor($event, notification().authors[0])"
           class="font-bold hover:underline cursor-pointer"
         >{{notification().authors[0] | displayName}}</a>
 
         and
 
         <a
-          (click)="openAuthor($event, notification().authors[1].did)"
+          (click)="openAuthor($event, notification().authors[1])"
           class="font-bold hover:underline cursor-pointer"
         >{{notification().authors[1] | displayName}}</a>
       }
       @default {
         <a
-          (click)="openAuthor($event, notification().authors[0].did)"
+          (click)="openAuthor($event, notification().authors[0])"
           class="font-bold hover:underline cursor-pointer"
         >{{notification().authors[0] | displayName}}</a>
 

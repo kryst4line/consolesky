@@ -1,4 +1,4 @@
-import {ChangeDetectionStrategy, ChangeDetectorRef, Component, signal} from '@angular/core';
+import {ChangeDetectorRef, Component, signal} from '@angular/core';
 import {from} from 'rxjs';
 import {agent} from '@core/bsky.api';
 import {AuthService} from '@core/auth/auth.service';
@@ -26,8 +26,7 @@ import {AuthorViewComponent} from '@components/aux-panes/author-view/author-view
     IsAuxPaneAuthorPipe,
     AuthorViewComponent,
   ],
-  templateUrl: './auxbar.component.html',
-  changeDetection: ChangeDetectionStrategy.OnPush
+  templateUrl: './auxbar.component.html'
 })
 export class AuxbarComponent {
   topics = signal<AppBskyUnspeccedDefs.TrendingTopic[]>([]);

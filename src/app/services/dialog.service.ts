@@ -36,69 +36,48 @@ export class DialogService {
     })
   }
 
-  closeAuxPaneChildren() {
+  openThread(uri: string) {
+    // Cancel action if user is selecting text
+    if (window.getSelection().toString().length) return;
+    // Bring pane to front if thread is already open
+    const pane = this.auxPanes().find(p => (p as ThreadAuxPane).uri && (p as ThreadAuxPane).uri == uri);
+    if (pane) {
+      this.reorderAuxPane(pane.uuid);
+      return;
+    }
+    // Mute all video players on auxbar
+    document.querySelector('auxbar').querySelectorAll('video').forEach((video: HTMLVideoElement) => {
+      video.muted = true;
+    });
+
     this.auxPanes.update(panes => {
-      panes[0].children.shift();
-      return panes;
-    })
+      return [new ThreadAuxPane(uri), ...panes];
+    });
   }
 
-  openThread(uri: string, children?: boolean) {
+  openAuthor(author: Partial<{did: string, handle: string}>) {
     // Cancel action if user is selecting text
     if (window.getSelection().toString().length) return;
-    // Cancel action if post is the same than the last opened thread
-    if (
-      this.auxPanes().length &&
-      (this.auxPanes()[this.auxPanes().length-1] as ThreadAuxPane).uri &&
-      (this.auxPanes()[this.auxPanes().length-1] as ThreadAuxPane).uri == uri
-    ) return;
+    // Bring pane to front if author is already open
+    const pane = this.auxPanes().find(p => (p as AuthorAuxPane).did && (p as AuthorAuxPane).did == author.did);
+    if (pane) {
+      this.reorderAuxPane(pane.uuid);
+      return;
+    }
     // Mute all video players on auxbar
     document.querySelector('auxbar').querySelectorAll('video').forEach((video: HTMLVideoElement) => {
       video.muted = true;
     });
 
-    const pane = new ThreadAuxPane();
-    pane.uri = uri;
-
-    if (children) {
-      this.auxPanes.update(panes => {
-        panes[0].children.unshift(pane);
-        return panes;
-      });
-    } else {
-      this.auxPanes.update(panes => {
-        return [pane, ...panes];
-      });
-    }
-  }
-
-  openAuthor(did: string, children?: boolean) {
-    // Cancel action if user is selecting text
-    if (window.getSelection().toString().length) return;
-    // Mute all video players on auxbar
-    document.querySelector('auxbar').querySelectorAll('video').forEach((video: HTMLVideoElement) => {
-      video.muted = true;
+    this.auxPanes.update(panes => {
+      return [new AuthorAuxPane(author), ...panes];
     });
-
-    const pane = new AuthorAuxPane();
-    pane.did = did;
-
-    if (children) {
-      this.auxPanes.update(panes => {
-        panes[0].children.unshift(pane);
-        return panes;
-      });
-    } else {
-      this.auxPanes.update(panes => {
-        return [pane, ...panes];
-      });
-    }
   }
 
-  openRecord(record: AppBskyEmbedRecord.View, children?: boolean) {
+  openRecord(record: AppBskyEmbedRecord.View) {
     switch (record.record.$type) {
       case 'app.bsky.embed.record#viewRecord':
-        this.openThread((record.record as AppBskyEmbedRecord.ViewRecord).uri, children);
+        this.openThread((record.record as AppBskyEmbedRecord.ViewRecord).uri);
         break;
       case 'app.bsky.graph.defs#listView':
         break;

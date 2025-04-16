@@ -27,22 +27,10 @@ type Options = typeof videojs.options;
   ],
   templateUrl: './external-embed.component.html',
   styles: `
-    :host(::ng-deep youtube-player) {
-      display: flex;
-    }
-    :host(::ng-deep youtube-player) youtube-player-placeholder {
-      width: 100% !important;
-      height: unset !important;
-    }
-    :host(::ng-deep youtube-player) > div {
+    .video-js {
+      height: auto;
       width: 100%;
     }
-    :host(::ng-deep youtube-player) > div iframe {
-      height: unset;
-      width: 100%;
-      aspect-ratio: 16 / 9;
-    }
-
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
