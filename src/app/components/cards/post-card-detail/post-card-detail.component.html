@@ -38,7 +38,7 @@
 
     <avatar
       [src]="author.avatar"
-      (click)="$event.stopPropagation()"
+      (click)="$event.stopPropagation(); dialogService.openAuthor(author)"
       class="h-12 w-12 shrink-0 cursor-pointer"
     />
 
@@ -46,12 +46,14 @@
       class="flex flex-col flex-1 min-w-0 justify-center"
     >
       <span
-        class="text-lg font-bold [text-box:trim-both_cap_alphabetic] w-fit min-w-0 overflow-y-visible overflow-x-clip overflow-ellipsis whitespace-nowrap cursor-pointer"
+        (click)="$event.stopPropagation(); dialogService.openAuthor(author)"
+        class="text-lg font-bold [text-box:trim-both_cap_alphabetic] w-fit min-w-0 overflow-y-visible overflow-x-clip overflow-ellipsis whitespace-nowrap cursor-pointer hover:underline"
       >{{author | displayName}}</span>
 
       @if (author.displayName?.trim().length) {
         <span
-          class="text-sm text-primary/50 [text-box:trim-both_cap_alphabetic] mt-3 w-fit min-w-0 overflow-y-visible overflow-x-clip whitespace-nowrap text-ellipsis cursor-pointer"
+          (click)="$event.stopPropagation(); dialogService.openAuthor(author)"
+          class="text-sm text-primary/50 [text-box:trim-both_cap_alphabetic] mt-3 w-fit min-w-0 overflow-y-visible overflow-x-clip whitespace-nowrap text-ellipsis cursor-pointer hover:underline"
         >{{'@' + author.handle}}</span>
       }
     </div>

@@ -74,7 +74,7 @@ export class PostCardDetailComponent implements OnInit, OnDestroy {
   constructor(
     private postService: PostService,
     private messageService: MessageService,
-    private dialogService: DialogService,
+    protected dialogService: DialogService,
     private cdRef: ChangeDetectorRef
   ) {
     effect(() => {

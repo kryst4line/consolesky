@@ -15,7 +15,7 @@
       <a
         href="https://bsky.app/profile/{{segment.mention?.did}}"
         class="hover:underline text-blue-500"
-        (click)="openAuthor($event, segment.mention?.did)"
+        (click)="openAuthor($event, segment)"
       >{{segment.text}}</a>
     } @else if (segment.isTag()) {
       <a

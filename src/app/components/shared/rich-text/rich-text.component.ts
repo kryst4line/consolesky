@@ -8,8 +8,8 @@ import {
   Output,
 } from '@angular/core';
 import {Facet, RichText, RichTextSegment} from "@atproto/api";
-// import {MskyDialogService} from '@services/msky-dialog.service';
 import {agent} from '@core/bsky.api';
+import {DialogService} from '@services/dialog.service';
 
 @Component({
   selector: 'rich-text',
@@ -25,7 +25,7 @@ export class RichTextComponent implements OnInit {
 
   constructor(
     private cdRef: ChangeDetectorRef,
-    // private dialogService: MskyDialogService
+    private dialogService: DialogService
   ) {}
 
   ngOnInit() {
@@ -46,10 +46,10 @@ export class RichTextComponent implements OnInit {
     }
   }
 
-  openAuthor(event: MouseEvent, did: string) {
+  openAuthor(event: MouseEvent, segment: RichTextSegment) {
     event.preventDefault();
     event.stopPropagation();
 
-    //TODO: OpenAuthor
+    this.dialogService.openAuthor({did: segment.mention?.did, handle: segment.text.replace("@", "")});
   }
 }

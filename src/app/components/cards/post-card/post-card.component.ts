@@ -15,7 +15,7 @@ import {AvatarComponent} from '@components/shared/avatar/avatar.component';
 import {DisplayNamePipe} from '@shared/pipes/display-name.pipe';
 import {IsFeedPostRecordPipe} from '@shared/pipes/type-guards/is-feed-post-record';
 import {RichTextComponent} from '@components/shared/rich-text/rich-text.component';
-import {NgClass, NgTemplateOutlet} from '@angular/common';
+import {DatePipe, NgClass, NgTemplateOutlet} from '@angular/common';
 import {IsFeedDefsPostViewPipe} from '@shared/pipes/type-guards/is-feed-defs-postview';
 import {DateFormatterPipe} from '@shared/pipes/date-formatter.pipe';
 import {IsEmbedRecordViewPipe} from '@shared/pipes/type-guards/is-embed-record-view.pipe';
@@ -58,7 +58,8 @@ import {DialogService} from '@services/dialog.service';
     OverlayModule,
     NgClass,
     ExternalEmbedComponent,
-    IsEmbedExternalViewPipe
+    IsEmbedExternalViewPipe,
+    DatePipe
   ],
   templateUrl: './post-card.component.html',
   styles: `
@@ -75,7 +76,10 @@ import {DialogService} from '@services/dialog.service';
       background-size: 1px 100%;
     }
   `,
-  changeDetection: ChangeDetectionStrategy.OnPush
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  providers: [
+    DatePipe
+  ]
 })
 export class PostCardComponent implements OnInit, OnDestroy {
   post = model<AppBskyFeedDefs.PostView>();
@@ -94,7 +98,7 @@ export class PostCardComponent implements OnInit, OnDestroy {
   constructor(
     private postService: PostService,
     private messageService: MessageService,
-    private dialogService: DialogService,
+    protected dialogService: DialogService,
     private cdRef: ChangeDetectorRef
   ) {
     effect(() => {

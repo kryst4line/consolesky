@@ -6,7 +6,7 @@
   >
     <avatar
       [src]="post().author.avatar"
-      (click)="$event.stopPropagation()"
+      (click)="$event.stopPropagation(); dialogService.openAuthor(post().author)"
       class="h-12 w-12"
     />
 
@@ -65,9 +65,10 @@
   <div
     class="flex mt-[0.15rem] w-full min-w-0"
   >
-    <span
-      class="font-bold [text-box:trim-both_cap_alphabetic] mr-1 grow-0 shrink-1 min-w-0 overflow-y-visible overflow-x-clip overflow-ellipsis whitespace-nowrap"
-    >{{author | displayName}}</span>
+    <a
+      (click)="$event.stopPropagation(); dialogService.openAuthor(author)"
+      class="font-bold [text-box:trim-both_cap_alphabetic] mr-1 grow-0 shrink-1 min-w-0 overflow-y-visible overflow-x-clip overflow-ellipsis whitespace-nowrap hover:underline"
+    >{{author | displayName}}</a>
 
     @if (reason | isFeedDefsReasonRepost) {
       <div
@@ -78,9 +79,10 @@
         >repeat</span>
       </div>
 
-      <span
-        class="font-bold text-primary/50 [text-box:trim-both_cap_alphabetic] grow-1 shrink-0 max-w-1/2 min-w-0 overflow-y-visible overflow-x-clip overflow-ellipsis whitespace-nowrap"
-      >{{reason.by | displayName}}</span>
+      <a
+        (click)="$event.stopPropagation(); dialogService.openAuthor(reason.by)"
+        class="font-bold text-primary/50 [text-box:trim-both_cap_alphabetic] grow-1 shrink-0 max-w-1/2 min-w-0 overflow-y-visible overflow-x-clip overflow-ellipsis whitespace-nowrap hover:underline"
+      >{{reason.by | displayName}}</a>
     }
 
 <!--    @if (author.displayName?.length) {-->
@@ -93,6 +95,7 @@
       <a
         (click)="$event.stopPropagation()"
         [href]="post().uri | linkExtractor: author.handle"
+        [title]="record.createdAt | date: 'medium'"
         target="_blank"
         class="text-sm text-primary/50 hover:underline [text-box:trim-both_cap_alphabetic] shrink-0 ml-auto pl-3"
       >{{record.createdAt | dateFormatter}}</a>

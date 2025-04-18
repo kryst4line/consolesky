@@ -20,6 +20,7 @@ import {RichTextComponent} from '@components/shared/rich-text/rich-text.componen
 import {AuthorFeedComponent} from '@components/feeds/author-feed/author-feed.component';
 import {ScrollDirective} from '@shared/directives/scroll.directive';
 import {IsLoggedUserPipe} from '@shared/pipes/is-logged-user.pipe';
+import {DialogService} from '@services/dialog.service';
 
 @Component({
   selector: 'author-view',
@@ -56,6 +57,7 @@ export class AuthorViewComponent implements OnInit {
 
   constructor(
     private messageService: MessageService,
+    protected dialogService: DialogService,
     private cdRef: ChangeDetectorRef
   ) {}
 

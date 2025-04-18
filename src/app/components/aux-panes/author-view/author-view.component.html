@@ -11,7 +11,8 @@
     >
       <avatar
         [src]="author().banner"
-        class="w-full aspect-[3_/_1]"
+        (click)="dialogService.openImage([{fullsize: author().banner, thumb: undefined, alt: undefined}], 0)"
+        class="w-full aspect-[3_/_1] cursor-pointer"
       />
 
       <div
@@ -19,7 +20,8 @@
       >
         <avatar
           [src]="author().avatar"
-          class="h-18 w-18 absolute -top-9 left-2 border-[0.25rem] border-bg !box-content"
+          (click)="dialogService.openImage([{fullsize: author().avatar, thumb: undefined, alt: undefined}], 0)"
+          class="h-18 w-18 absolute -top-9 left-2 border-[0.25rem] border-bg !box-content cursor-pointer"
         />
       </div>
 
