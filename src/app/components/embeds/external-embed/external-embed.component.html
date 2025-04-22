@@ -52,7 +52,7 @@
   @if (snippet.source == YoutubeSnippetSource) {
     <youtube-player
       [videoId]="snippet.url"
-      class="aspect-video"
+      class="block aspect-video w-full max-w-full min-w-0"
       (click)="$event.stopPropagation()"
     />
   } @else {

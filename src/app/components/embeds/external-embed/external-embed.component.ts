@@ -31,6 +31,24 @@ type Options = typeof videojs.options;
       height: auto;
       width: 100%;
     }
+    :host ::ng-deep youtube-player iframe {
+      display: flex;
+      min-width: 0;
+      min-height: 0;
+      height: 100%;
+      width: 100%;
+    }
+    :host ::ng-deep youtube-player > div {
+      display: contents;
+    }
+    :host ::ng-deep youtube-player youtube-player-placeholder {
+      width: 100% !important;
+      height: auto !important;
+      aspect-ratio: 16 / 9;
+    }
+    :host ::ng-deep youtube-player youtube-player-placeholder .youtube-player-placeholder-button {
+      cursor: pointer;
+    }
   `,
   changeDetection: ChangeDetectionStrategy.OnPush
 })
