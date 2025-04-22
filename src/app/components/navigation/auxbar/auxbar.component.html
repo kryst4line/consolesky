@@ -17,7 +17,20 @@
 
       <span
         class="bg-primary text-bg text-xl font-medium flex items-center p-3"
-      >thread view</span>
+      >
+        @let pane = dialogService.auxPanes()[0];
+        @if (pane | isAuxPaneThread) {
+          thread view
+        } @else if (pane | isAuxPaneAuthor) {
+          &commat;{{pane.handle}}
+        } @else if (pane | isAuxPaneSearch) {
+          @if (pane.query) {
+            search: {{pane.query}}
+          } @else {
+            search
+          }
+        }
+      </span>
 
       @if (dialogService.auxPanes().length > 1) {
         <button
@@ -110,6 +123,10 @@
       } @else if (pane | isAuxPaneAuthor) {
         <author-view
           [did]="pane.did"
+        />
+      } @else if (pane | isAuxPaneSearch) {
+        <search-view
+          [(query)]="pane.query"
         />
       }
     </div>

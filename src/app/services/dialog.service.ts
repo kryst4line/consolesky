@@ -2,7 +2,7 @@ import {Injectable, signal} from '@angular/core';
 import {Dialog} from '@angular/cdk/dialog';
 import {GalleryComponent} from '@components/dialogs/gallery/gallery.component';
 import {AppBskyEmbedImages, AppBskyEmbedRecord} from '@atproto/api';
-import {AuthorAuxPane, AuxPane, ThreadAuxPane} from '@models/aux-pane';
+import {AuthorAuxPane, AuxPane, SearchAuxPane, ThreadAuxPane} from '@models/aux-pane';
 import {moveItemInArray} from '@angular/cdk/drag-drop';
 
 @Injectable({
@@ -88,5 +88,20 @@ export class DialogService {
       case 'app.bsky.labeler.defs#labelerView':
         break;
     }
+  }
+
+  openSearch(query?: string) {
+    // Cancel action if user is selecting text
+    if (window.getSelection().toString().length) return;
+    // Bring pane to front if author is already open
+    const pane = this.auxPanes().find(p => (p as SearchAuxPane).type == 'SEARCH');
+    if (pane) {
+      this.reorderAuxPane(pane.uuid);
+      return;
+    }
+
+    this.auxPanes.update(panes => {
+      return [new SearchAuxPane(query), ...panes];
+    });
   }
 }

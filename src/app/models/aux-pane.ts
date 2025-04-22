@@ -39,6 +39,11 @@ export class GeneratorAuxPane extends AuxPane {
 export class SearchAuxPane extends AuxPane {
   type: AuxPaneType.SEARCH = AuxPaneType.SEARCH;
   query: string;
+
+  constructor(query?: string) {
+    super();
+    this.query = query;
+  }
 }
 
 export enum AuxPaneType {

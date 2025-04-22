@@ -259,6 +259,12 @@ app-root * {
     &:disabled {
       pointer-events: none;
     }
+
+    &:focus-visible {
+      outline: none;
+      background-color: var(--color-primary);
+      color: var(--color-bg);
+    }
   }
 }
 

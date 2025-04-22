@@ -7,6 +7,18 @@
     <span
       class="bg-primary text-bg text-xl font-bold flex items-center px-3"
     >//consolesky.</span>
+    <button
+      (click)="dialogService.openSearch()"
+      class="flex h-9 w-9 items-center justify-center border-t border-r border-primary cursor-pointer hover:bg-primary/3"
+    >
+      <div
+        class="h-6 w-6"
+      >
+        <span
+          class="material-icons !text-2xl -translate-y-1"
+        >search</span>
+      </div>
+    </button>
   </div>
   <div
     class="flex flex-col flex-1 border-r border-primary"

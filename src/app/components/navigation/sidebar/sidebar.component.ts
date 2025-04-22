@@ -1,15 +1,16 @@
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {PostService} from '@services/post.service';
+import {DialogService} from '@services/dialog.service';
 
 @Component({
   selector: 'sidebar',
-  imports: [],
   templateUrl: './sidebar.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class SidebarComponent {
   constructor(
-    protected postService: PostService
+    protected postService: PostService,
+    protected dialogService: DialogService
   ) {}
 
 }

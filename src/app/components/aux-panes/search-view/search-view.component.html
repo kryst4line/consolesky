@@ -1,0 +1,202 @@
+<div
+  class="flex flex-col h-full min-h-0 w-full min-w-0"
+>
+  <div
+    class="flex relative"
+  >
+    <span
+      class="absolute font-black leading-7.5 ml-1.5"
+    >></span>
+    <input
+      #search
+      [ngModel]="query()"
+      (keyup)="triggerSuggestion($event, $any($event.target).value)"
+      (keydown.arrowDown)="focusNext(-1)"
+      (keydown.enter)="query.set($any($event.target).value)"
+      placeholder="Search something"
+      class="h-8 w-full border-b border-primary outline-none pl-5 pr-1 placeholder:opacity-50"
+    >
+
+    <ng-template
+      cdkConnectedOverlay
+      [cdkConnectedOverlayOrigin]="search"
+      [cdkConnectedOverlayOpen]="userSuggestions?.length > 0"
+      (detach)="userSuggestions = undefined; search.focus()"
+      (overlayOutsideClick)="userSuggestions = undefined"
+    >
+      <ul
+        #suggestionTemplate
+        role="listbox"
+        class="border-r border-b border-primary bg-bg">
+        @for (user of userSuggestions; track user.did; let i = $index) {
+          <li>
+            <button
+              (click)="dialogService.openAuthor(user); userSuggestions = undefined"
+              (keydown.arrowDown)="focusNext(i)"
+              (keydown.arrowUp)="focusPrev(i)"
+              class="btn-dropdown"
+              [tabindex]="0"
+            >
+              {{user.handle}}
+            </button>
+          </li>
+        }
+      </ul>
+    </ng-template>
+  </div>
+</div>
+
+<!--@if (savedQuery()) {-->
+<!--  <div-->
+<!--    #scroll-->
+<!--    vScroll-->
+<!--    (scrollEnding)="feed.nextData()"-->
+<!--    class="flex flex-col h-full overflow-hidden hover:overflow-y-auto"-->
+<!--  >-->
+<!--    <div-->
+<!--      #authorCard-->
+<!--      class="flex flex-col"-->
+<!--    >-->
+<!--      <avatar-->
+<!--        [src]="author().banner"-->
+<!--        (click)="dialogService.openImage([{fullsize: author().banner, thumb: undefined, alt: undefined}], 0)"-->
+<!--        class="w-full aspect-[3_/_1] cursor-pointer"-->
+<!--      />-->
+
+<!--      <div-->
+<!--        class="relative h-0 w-full"-->
+<!--      >-->
+<!--        <avatar-->
+<!--          [src]="author().avatar"-->
+<!--          (click)="dialogService.openImage([{fullsize: author().avatar, thumb: undefined, alt: undefined}], 0)"-->
+<!--          class="h-18 w-18 absolute -top-9 left-2 border-[0.25rem] border-bg !box-content cursor-pointer"-->
+<!--        />-->
+<!--      </div>-->
+
+<!--      <div-->
+<!--        class="flex w-full h-8 mt-2 px-3 justify-end"-->
+<!--      >-->
+<!--        <ng-container-->
+<!--          [ngTemplateOutlet]="followBtn"-->
+<!--        />-->
+<!--      </div>-->
+
+<!--      <span-->
+<!--        class="text-2xl font-bold mt-2 ml-3"-->
+<!--      >{{author() | displayName}}</span>-->
+
+<!--      @if (author().displayName) {-->
+<!--        <span-->
+<!--          class="ml-3 text-primary/50"-->
+<!--        >{{'@' + author().handle}}</span>-->
+<!--      }-->
+
+<!--      <div-->
+<!--        class="flex ml-3 mt-2 gap-4"-->
+<!--      >-->
+<!--        <a-->
+<!--          class="cursor-pointer hover:underline"-->
+<!--        >-->
+<!--          <span-->
+<!--            class="font-semibold"-->
+<!--          >{{author().postsCount}}</span>-->
+<!--          <span-->
+<!--            class="text-primary/50"-->
+<!--          >&#8196;posts</span>-->
+<!--        </a>-->
+<!--        <a-->
+<!--          class="cursor-pointer hover:underline"-->
+<!--        >-->
+<!--          <span-->
+<!--            class="font-semibold"-->
+<!--          >{{author().followersCount}}</span>-->
+<!--          <span-->
+<!--            class="text-primary/50"-->
+<!--          >&#8196;followers</span>-->
+<!--        </a>-->
+<!--        <a-->
+<!--          class="cursor-pointer hover:underline"-->
+<!--        >-->
+<!--          <span-->
+<!--            class="font-semibold"-->
+<!--          >{{author().followsCount}}</span>-->
+<!--          <span-->
+<!--            class="text-primary/50"-->
+<!--          >&#8196;follows</span>-->
+<!--        </a>-->
+<!--      </div>-->
+
+<!--      <rich-text-->
+<!--        [text]="author().description"-->
+<!--        class="text-sm px-3 mt-2"-->
+<!--        [class.line-clamp-3]="!expandBio()"-->
+<!--      />-->
+
+<!--      <a-->
+<!--        (click)="expandBio.set(!expandBio())"-->
+<!--        class="w-fit ml-3 text-primary/50 cursor-pointer hover:underline"-->
+<!--      >{{ expandBio() ? 'Show less' : 'Show more'}}</a>-->
+
+<!--      @if (author().viewer.knownFollowers) {-->
+<!--        <a-->
+<!--          class="w-fit ml-3 mt-3 text-primary/50 cursor-pointer hover:underline"-->
+<!--        >{{author().viewer.knownFollowers.count}} followers you know</a>-->
+<!--      }-->
+<!--    </div>-->
+
+<!--    <div-->
+<!--      #selector-->
+<!--      class="relative h-0 mt-2"-->
+<!--    ></div>-->
+<!--    <div-->
+<!--      class="flex w-full h-10 sticky top-0 z-1 bg-bg"-->
+<!--    >-->
+<!--      <button-->
+<!--        (click)="setFilter('posts_no_replies')"-->
+<!--        class="btn-secondary border-0 border-b border-b-primary/10 flex flex-1 items-center justify-center"-->
+<!--        [ngClass]="{'!border-b-primary font-semibold': filter() == 'posts_no_replies'}"-->
+<!--      >posts</button>-->
+<!--      <span-->
+<!--        (click)="setFilter('posts_with_replies')"-->
+<!--        class="btn-secondary border-0 border-b border-b-primary/10 flex flex-1 items-center justify-center"-->
+<!--        [ngClass]="{'!border-b-primary font-semibold': filter() == 'posts_with_replies'}"-->
+<!--      >replies</span>-->
+<!--      <span-->
+<!--        (click)="setFilter('posts_with_media')"-->
+<!--        class="btn-secondary border-0 border-b border-b-primary/10 flex flex-1 items-center justify-center"-->
+<!--        [ngClass]="{'!border-b-primary font-semibold': filter() == 'posts_with_media'}"-->
+<!--      >media</span>-->
+<!--    </div>-->
+
+<!--    <author-feed-->
+<!--      #feed-->
+<!--      [did]="author().did"-->
+<!--      [filter]="this.filter()"-->
+<!--    />-->
+<!--  </div>-->
+<!--} @else {-->
+<!--  <div-->
+<!--    class="h-full w-full flex justify-center mt-16 text-4xl"-->
+<!--  >-->
+<!--    <spinner/>-->
+<!--  </div>-->
+<!--}-->
+
+<!--<ng-template-->
+<!--  #followBtn-->
+<!--&gt;-->
+<!--  @if (author() | isLoggedUser) {-->
+<!--    <button-->
+<!--      class="btn-secondary py-0 h-full font-bold"-->
+<!--      disabled-->
+<!--    >omg it you ✨</button>-->
+<!--  } @else if (author().viewer.following) {-->
+<!--    <button-->
+<!--      class="btn-primary py-0 h-full font-bold"-->
+<!--    >following</button>-->
+<!--  } @else {-->
+<!--    <button-->
+<!--      class="btn-secondary py-0 h-full font-bold"-->
+<!--    >follow</button>-->
+<!--  }-->
+<!--</ng-template>-->

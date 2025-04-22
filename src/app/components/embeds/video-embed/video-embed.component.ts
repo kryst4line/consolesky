@@ -10,25 +10,27 @@ type Options = typeof videojs.options;
   templateUrl: './video-embed.component.html',
   styles:
     `
-    ::ng-deep .video-js .vjs-control-bar {
-      background: linear-gradient(to top, rgba(43, 51, 63, 0.7), transparent);
-    }
-    ::ng-deep .video-js > .vjs-remaining-time {
-      height: 0;
-      position: absolute;
-      bottom: 0;
-      right: 0;
-      font-size: 0.75rem;
-      font-family: 'Inter', sans-serif;
-      opacity: 0;
-    }
-    ::ng-deep .video-js.vjs-user-inactive .vjs-remaining-time {
-      height: 2rem;
-      opacity: 1;
-      transition: 1.5s opacity ease;
-    }
-  `,
-  changeDetection: ChangeDetectionStrategy.OnPush,
+      ::ng-deep .video-js .vjs-control-bar {
+        background: linear-gradient(to top, rgba(43, 51, 63, 0.7), transparent);
+      }
+
+      ::ng-deep .video-js > .vjs-remaining-time {
+        height: 0;
+        position: absolute;
+        bottom: 0;
+        right: 0;
+        font-size: 0.75rem;
+        font-family: 'Inter', sans-serif;
+        opacity: 0;
+      }
+
+      ::ng-deep .video-js.vjs-user-inactive .vjs-remaining-time {
+        height: 2rem;
+        opacity: 1;
+        transition: 1.5s opacity ease;
+      }
+    `,
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class VideoEmbedComponent implements OnInit, OnDestroy {
   embed = input<AppBskyEmbedVideo.View>();

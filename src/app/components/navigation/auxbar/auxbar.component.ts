@@ -12,6 +12,8 @@ import {MessageService} from '@services/message.service';
 import {CdkConnectedOverlay} from '@angular/cdk/overlay';
 import {IsAuxPaneAuthorPipe} from '@shared/pipes/type-guards/is-auxpane-author';
 import {AuthorViewComponent} from '@components/aux-panes/author-view/author-view.component';
+import {IsAuxPaneSearchPipe} from '@shared/pipes/type-guards/is-auxpane-search';
+import {SearchViewComponent} from '@components/aux-panes/search-view/search-view.component';
 
 @Component({
   selector: 'auxbar',
@@ -25,6 +27,8 @@ import {AuthorViewComponent} from '@components/aux-panes/author-view/author-view
     SlicePipe,
     IsAuxPaneAuthorPipe,
     AuthorViewComponent,
+    IsAuxPaneSearchPipe,
+    SearchViewComponent,
   ],
   templateUrl: './auxbar.component.html'
 })
