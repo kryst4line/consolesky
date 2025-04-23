@@ -1,0 +1,27 @@
+<div
+  #feed
+  class="w-full h-full min-h-0 flex flex-col margin-[0_auto] overflow-hidden hover:overflow-y-auto transition items-center"
+  vScroll
+  (scrollEnding)="nextData(); manageRefresh();"
+  (scrollTop)="manageRefresh();"
+>
+  @if (posts) {
+    @for (post of posts; track post().uri) {
+      <post-card
+        [post]="post()"
+        (postChange)="post.set($event)"
+        (click)="dialogService.openThread(post().uri)"
+        (onEmbedRecord)="dialogService.openRecord($event)"
+        class="cursor-pointer hover:bg-primary/2 w-full px-3 pt-3 pb-1"
+      />
+
+      <divider/>
+    }
+  } @else {
+    <div
+      class="h-full w-full flex justify-center mt-16 text-4xl"
+    >
+      <spinner/>
+    </div>
+  }
+</div>

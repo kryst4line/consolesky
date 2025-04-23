@@ -1,0 +1,41 @@
+@if (compact() && !(author() | isLoggedUser)) {
+  @if (author().viewer?.following) {
+    <button
+      (click)="onUnfollow.emit()"
+      class="btn-primary h-8 w-8 p-0 flex items-center justify-center font-bold"
+    >
+      <span
+        class="material-icons !text-xl"
+      >how_to_reg</span>
+    </button>
+  } @else {
+    <button
+      (click)="onFollow.emit()"
+      class="btn-secondary h-8 w-8 p-0 flex items-center justify-center font-bold"
+    >
+      <span
+        class="material-icons !text-xl"
+      >person_add</span>
+    </button>
+  }
+} @else {
+  @if (author() | isLoggedUser) {
+    <button
+      class="btn-secondary py-0 h-full font-bold"
+      disabled
+    >omg it you ✨
+    </button>
+  } @else if (author().viewer?.following) {
+    <button
+      (click)="onUnfollow.emit()"
+      class="btn-primary py-0 h-full font-bold"
+    >following
+    </button>
+  } @else {
+    <button
+      (click)="onFollow.emit()"
+      class="btn-secondary py-0 h-full font-bold"
+    >follow
+    </button>
+  }
+}

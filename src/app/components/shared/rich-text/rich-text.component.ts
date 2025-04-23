@@ -52,4 +52,11 @@ export class RichTextComponent implements OnInit {
 
     this.dialogService.openAuthor({did: segment.mention?.did, handle: segment.text.replace("@", "")});
   }
+
+  openSearch(event: MouseEvent, segment: RichTextSegment) {
+    event.preventDefault();
+    event.stopPropagation();
+
+    this.dialogService.openSearch(segment.text);
+  }
 }

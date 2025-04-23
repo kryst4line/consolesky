@@ -17,16 +17,29 @@ import {AppBskyActorDefs, AppBskyFeedDefs} from '@atproto/api';
 import {DialogService} from '@services/dialog.service';
 import {FormsModule} from '@angular/forms';
 import {CdkConnectedOverlay} from '@angular/cdk/overlay';
+import {ScrollDirective} from '@shared/directives/scroll.directive';
+import {SearchFeedComponent} from '@components/feeds/search-feed/search-feed.component';
+import {SpinnerComponent} from '@components/shared/spinner/spinner.component';
+import {NgClass, NgTemplateOutlet} from '@angular/common';
+import {AuthorCardComponent} from '@components/cards/author-card/author-card.component';
+import {DividerComponent} from '@components/shared/divider/divider.component';
 
 @Component({
   selector: 'search-view',
   imports: [
     FormsModule,
-    CdkConnectedOverlay
+    CdkConnectedOverlay,
+    ScrollDirective,
+    SearchFeedComponent,
+    SpinnerComponent,
+    NgClass,
+    NgTemplateOutlet,
+    AuthorCardComponent,
+    DividerComponent
   ],
   templateUrl: './search-view.component.html',
   styles: `
-    :host ::ng-deep author-feed > div {
+    :host ::ng-deep search-feed > div {
       scrollbar-gutter: auto;
     }
   `,
@@ -45,10 +58,8 @@ export class SearchViewComponent implements OnInit, OnDestroy {
   feeds = signal<AppBskyFeedDefs.GeneratorView[]>([]);
 
   search = viewChild('search', {read: ElementRef});
-  selector = viewChild('selector', {read: ElementRef});
   scroll = viewChild('scroll', {read: ElementRef});
-  userTemplate = viewChild('userTemplate');
-  generatorTemplate = viewChild('generatorTemplate');
+  searchFeed = viewChild<SearchFeedComponent>('feed');
   suggestionTemplate = viewChild('suggestionTemplate', {read: ElementRef});
 
   userSuggestions: AppBskyActorDefs.ProfileViewBasic[];
@@ -60,10 +71,10 @@ export class SearchViewComponent implements OnInit, OnDestroy {
     private cdRef: ChangeDetectorRef
   ) {
     effect(() => {
-      if (this.userTemplate() && this.query()) {
+      if (this.query() && this.searchType() == 'user') {
         this.initUsers();
       }
-      if (this.generatorTemplate() && this.query()) {
+      if (this.query() && this.searchType() == 'generator') {
         this.initFeeds();
       }
     });
@@ -84,10 +95,9 @@ export class SearchViewComponent implements OnInit, OnDestroy {
   initUsers() {
     if (!this.query()) return;
 
-    this.users.set([]);
     agent.searchActors({
       q: this.query(),
-      limit: 15
+      limit: 30
     }).then(response => {
       this.users.set(response.data.actors);
       this.cursor.set(response.data.cursor);
@@ -183,6 +193,36 @@ export class SearchViewComponent implements OnInit, OnDestroy {
       this.suggestionTemplate().nativeElement.children[this.suggestionTemplate().nativeElement.children.length - 1].firstChild.focus();
     } else {
       this.suggestionTemplate().nativeElement.children[index - 1].firstChild.focus();
+    }
+  }
+
+  setFilter(filter:
+    | 'top'
+    | 'latest'
+    | 'user'
+    | 'generator'
+  ) {
+    this.searchType.set(filter);
+
+    this.users.set(undefined);
+    this.feeds.set(undefined);
+
+    if (this.searchType() == 'user') this.initUsers();
+    if (this.searchType() == 'generator') this.initFeeds();
+  }
+
+  loadMore() {
+    switch (this.searchType()) {
+      case 'top':
+      case 'latest':
+        this.searchFeed().nextData();
+        break;
+      case 'user':
+        this.nextUsers();
+        break;
+      case 'generator':
+        this.nextFeeds();
+        break;
     }
   }
 }

@@ -12,28 +12,27 @@ import {from} from 'rxjs';
 import {agent} from '@core/bsky.api';
 import {MessageService} from '@services/message.service';
 import {AppBskyActorDefs} from '@atproto/api';
-import {NgClass, NgTemplateOutlet} from '@angular/common';
+import {NgClass} from '@angular/common';
 import {SpinnerComponent} from '@components/shared/spinner/spinner.component';
 import {AvatarComponent} from '@components/shared/avatar/avatar.component';
 import {DisplayNamePipe} from '@shared/pipes/display-name.pipe';
 import {RichTextComponent} from '@components/shared/rich-text/rich-text.component';
 import {AuthorFeedComponent} from '@components/feeds/author-feed/author-feed.component';
 import {ScrollDirective} from '@shared/directives/scroll.directive';
-import {IsLoggedUserPipe} from '@shared/pipes/is-logged-user.pipe';
 import {DialogService} from '@services/dialog.service';
+import {ButtonFollowComponent} from '@components/shared/button-follow/button-follow.component';
 
 @Component({
   selector: 'author-view',
   imports: [
     SpinnerComponent,
     AvatarComponent,
-    NgTemplateOutlet,
     DisplayNamePipe,
     RichTextComponent,
     NgClass,
     AuthorFeedComponent,
     ScrollDirective,
-    IsLoggedUserPipe
+    ButtonFollowComponent
   ],
   templateUrl: './author-view.component.html',
   styles: `

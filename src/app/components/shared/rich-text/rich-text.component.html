@@ -21,7 +21,7 @@
       <a
         href="https://bsky.app/hashtag/{{segment.tag?.tag}}"
         class="hover:underline text-blue-500 visited:text-purple-500"
-        (click)="$event.stopPropagation(); $event.preventDefault()"
+        (click)="openSearch($event, segment)"
       >{{segment.text}}</a>
     } @else {
       <span class="break-words">{{segment.text}}</span>

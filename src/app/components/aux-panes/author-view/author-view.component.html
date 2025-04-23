@@ -28,8 +28,9 @@
       <div
         class="flex w-full h-8 mt-2 px-3 justify-end"
       >
-        <ng-container
-          [ngTemplateOutlet]="followBtn"
+
+        <button-follow
+          [author]="author()"
         />
       </div>
 
@@ -133,22 +134,3 @@
     <spinner/>
   </div>
 }
-
-<ng-template
-  #followBtn
->
-  @if (author() | isLoggedUser) {
-    <button
-      class="btn-secondary py-0 h-full font-bold"
-      disabled
-    >omg it you ✨</button>
-  } @else if (author().viewer.following) {
-    <button
-      class="btn-primary py-0 h-full font-bold"
-    >following</button>
-  } @else {
-    <button
-      class="btn-secondary py-0 h-full font-bold"
-    >follow</button>
-  }
-</ng-template>
