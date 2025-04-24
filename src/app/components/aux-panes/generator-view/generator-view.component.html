@@ -1,0 +1,54 @@
+
+<div
+  class="flex flex-col"
+>
+  <div
+    class="flex ml-3 mt-3 w-full min-w-0"
+  >
+    <avatar
+      [src]="generator().avatar"
+      (click)="dialogService.openImage([{fullsize: generator().avatar, thumb: undefined, alt: undefined}], 0)"
+      class="h-18 w-18 cursor-pointer"
+    />
+
+    <div
+      class="flex flex-col"
+    >
+      <span
+        class="text-2xl font-bold mt-2 ml-3"
+      >{{generator().displayName}}</span>
+
+      <span
+        class="ml-3 text-primary/50"
+      >Feed by
+        <a
+          (click)="dialogService.openAuthor(generator().creator)"
+          class="hover:underline cursor-pointer"
+        >{{'@' + generator().creator.handle}}</a>
+      </span>
+    </div>
+  </div>
+
+  <a
+    class="w-fit ml-3 mt-3 text-primary/50 cursor-pointer hover:underline"
+  >Liked by {{generator().likeCount}} users</a>
+
+  <rich-text
+    [text]="generator().description"
+    class="text-sm px-3 my-3"
+  />
+</div>
+
+<divider/>
+
+<div
+  #scroll
+  vScroll
+  (scrollEnding)="feed.nextData()"
+  class="flex flex-col h-full overflow-hidden hover:overflow-y-auto"
+>
+  <generator-feed
+    #feed
+    [uri]="generator().uri"
+  />
+</div>

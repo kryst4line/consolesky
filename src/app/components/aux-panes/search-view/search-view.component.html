@@ -126,5 +126,20 @@
 <ng-template
   #feedsTemplate
 >
-
+  @if (feeds()?.length) {
+    @for (feed of feeds(); track feed.did) {
+      <generator-card
+        [generator]="feed"
+        (click)="dialogService.openGenerator(feed)"
+        class="px-3 py-2 cursor-pointer hover:bg-primary/2"
+      />
+      <divider/>
+    }
+  } @else {
+    <div
+      class="h-full w-full flex justify-center mt-16 text-4xl"
+    >
+      <spinner/>
+    </div>
+  }
 </ng-template>

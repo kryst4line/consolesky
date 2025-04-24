@@ -14,6 +14,8 @@ import {IsAuxPaneAuthorPipe} from '@shared/pipes/type-guards/is-auxpane-author';
 import {AuthorViewComponent} from '@components/aux-panes/author-view/author-view.component';
 import {IsAuxPaneSearchPipe} from '@shared/pipes/type-guards/is-auxpane-search';
 import {SearchViewComponent} from '@components/aux-panes/search-view/search-view.component';
+import {IsAuxPaneGeneratorPipe} from '@shared/pipes/type-guards/is-auxpane-generator';
+import {GeneratorViewComponent} from '@components/aux-panes/generator-view/generator-view.component';
 
 @Component({
   selector: 'auxbar',
@@ -29,6 +31,8 @@ import {SearchViewComponent} from '@components/aux-panes/search-view/search-view
     AuthorViewComponent,
     IsAuxPaneSearchPipe,
     SearchViewComponent,
+    IsAuxPaneGeneratorPipe,
+    GeneratorViewComponent,
   ],
   templateUrl: './auxbar.component.html'
 })

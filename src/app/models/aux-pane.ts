@@ -1,4 +1,5 @@
 import * as uuid from "uuid";
+import {AppBskyFeedDefs} from '@atproto/api';
 
 export class AuxPane {
   uuid: string = uuid.v4();
@@ -33,7 +34,12 @@ export class ListAuxPane extends AuxPane {
 
 export class GeneratorAuxPane extends AuxPane {
   type: AuxPaneType.GENERATOR = AuxPaneType.GENERATOR;
-  uri: string;
+  generator: AppBskyFeedDefs.GeneratorView;
+
+  constructor(generator: AppBskyFeedDefs.GeneratorView) {
+    super();
+    this.generator = generator;
+  }
 }
 
 export class SearchAuxPane extends AuxPane {

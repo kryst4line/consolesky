@@ -23,6 +23,7 @@ import {SpinnerComponent} from '@components/shared/spinner/spinner.component';
 import {NgClass, NgTemplateOutlet} from '@angular/common';
 import {AuthorCardComponent} from '@components/cards/author-card/author-card.component';
 import {DividerComponent} from '@components/shared/divider/divider.component';
+import {GeneratorCardComponent} from '@components/cards/generator-card/generator-card.component';
 
 @Component({
   selector: 'search-view',
@@ -35,7 +36,8 @@ import {DividerComponent} from '@components/shared/divider/divider.component';
     NgClass,
     NgTemplateOutlet,
     AuthorCardComponent,
-    DividerComponent
+    DividerComponent,
+    GeneratorCardComponent
   ],
   templateUrl: './search-view.component.html',
   styles: `
@@ -66,7 +68,6 @@ export class SearchViewComponent implements OnInit, OnDestroy {
   userSubject = new Subject<string>();
 
   constructor(
-    private messageService: MessageService,
     protected dialogService: DialogService,
     private cdRef: ChangeDetectorRef
   ) {
@@ -126,7 +127,7 @@ export class SearchViewComponent implements OnInit, OnDestroy {
     this.feeds.set([]);
     agent.app.bsky.unspecced.getPopularFeedGenerators({
       query: this.query(),
-      limit: 15
+      limit: 30
     }).then(response => {
       this.feeds.set(response.data.feeds);
       this.cursor.set(response.data.cursor);

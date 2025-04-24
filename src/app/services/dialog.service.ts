@@ -1,8 +1,8 @@
 import {Injectable, signal} from '@angular/core';
 import {Dialog} from '@angular/cdk/dialog';
 import {GalleryComponent} from '@components/dialogs/gallery/gallery.component';
-import {AppBskyEmbedImages, AppBskyEmbedRecord} from '@atproto/api';
-import {AuthorAuxPane, AuxPane, SearchAuxPane, ThreadAuxPane} from '@models/aux-pane';
+import {AppBskyEmbedImages, AppBskyEmbedRecord, AppBskyFeedDefs} from '@atproto/api';
+import {AuthorAuxPane, AuxPane, GeneratorAuxPane, SearchAuxPane, ThreadAuxPane} from '@models/aux-pane';
 import {moveItemInArray} from '@angular/cdk/drag-drop';
 
 @Injectable({
@@ -99,9 +99,32 @@ export class DialogService {
       this.reorderAuxPane(pane.uuid);
       return;
     }
+    // Mute all video players on auxbar
+    document.querySelector('auxbar').querySelectorAll('video').forEach((video: HTMLVideoElement) => {
+      video.muted = true;
+    });
 
     this.auxPanes.update(panes => {
       return [new SearchAuxPane(query), ...panes];
+    });
+  }
+
+  openGenerator(generator: AppBskyFeedDefs.GeneratorView) {
+    // Cancel action if user is selecting text
+    if (window.getSelection().toString().length) return;
+    // Bring pane to front if author is already open
+    const pane = this.auxPanes().find(p => (p as GeneratorAuxPane).generator?.uri == generator.uri);
+    if (pane) {
+      this.reorderAuxPane(pane.uuid);
+      return;
+    }
+    // Mute all video players on auxbar
+    document.querySelector('auxbar').querySelectorAll('video').forEach((video: HTMLVideoElement) => {
+      video.muted = true;
+    });
+
+    this.auxPanes.update(panes => {
+      return [new GeneratorAuxPane(generator), ...panes];
     });
   }
 }

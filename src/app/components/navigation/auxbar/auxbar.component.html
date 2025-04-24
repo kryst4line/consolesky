@@ -29,6 +29,8 @@
           } @else {
             search
           }
+        } @else if (pane | isAuxPaneGenerator) {
+          {{pane.generator.displayName}}
         }
       </span>
 
@@ -70,6 +72,14 @@
             }
             @if (pane | isAuxPaneAuthor) {
               {{'@' + pane.handle}}
+            } @else if (pane | isAuxPaneSearch) {
+              @if (pane.query) {
+                search: {{pane.query}}
+              } @else {
+                search
+              }
+            } @else if (pane | isAuxPaneGenerator) {
+              {{pane.generator.displayName}}
             }
           </button>
         </li>
@@ -127,6 +137,10 @@
       } @else if (pane | isAuxPaneSearch) {
         <search-view
           [(query)]="pane.query"
+        />
+      } @else if (pane | isAuxPaneGenerator) {
+        <generator-view
+          [generator]="pane.generator"
         />
       }
     </div>
