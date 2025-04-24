@@ -1,6 +1,6 @@
 <div align="center">
 
-  <img src="https://github.com/kryst4line/consolesky/raw/refs/heads/main/.github/icon.webp" alt="logo" width="200" height="auto" />
+  <img src="https://github.com/kryst4line/consolesky/raw/refs/heads/main/.github/logo.webp" alt="logo" width="200" height="auto" />
   <h1>//consolesky.</h1>
 
 Yet Another Bluesky Client
