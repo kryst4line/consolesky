@@ -1,59 +1,67 @@
-# Consolesky
+<div align="center">
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.5.
+  <img src="https://github.com/kryst4line/consolesky/raw/refs/heads/main/.github/icon.webp" alt="logo" width="200" height="auto" />
+  <h1>//consolesky.</h1>
 
-## Development server
+Yet Another Bluesky Client
 
-To start a local development server, run:
+  <br>
 
-```bash
-ng serve
-```
+[![contributors](https://img.shields.io/github/contributors/kryst4line/consolesky)](https://github.com/kryst4line/consolesky/graphs/contributors)
+[![commits](https://img.shields.io/github/last-commit/kryst4line/consolesky)](https://github.com/kryst4line/consolesky/commits/main)
+[![stars](https://img.shields.io/github/stars/kryst4line/consolesky)](https://github.com/kryst4line/consolesky/stargazers)
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+  <br>
 
-## Code scaffolding
+Follow the updates:
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+[![bluesky link](https://img.shields.io/badge/Bluesky-%230285FF.svg?logo=bluesky&logoColor=white)](https://bsky.app/profile/metrosky.dragon.gal)
 
-```bash
-ng generate component component-name
-```
+  <br>
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+[![Repobeats analytics image](https://repobeats.axiom.co/api/embed/45a737f96a28d68b0c1036da17f8ee030af9f784.svg "Repobeats analytics image")](https://github.com/kryst4line/consolesky/pulse)
 
-```bash
-ng generate --help
-```
+</div>
 
-## Building
+<br />
 
-To build the project run:
 
-```bash
-ng build
-```
+<!-- Screenshots -->
+## :camera: Screenshots
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+<div align="center">
+    <img src="https://github.com/kryst4line/metrosky/raw/refs/heads/main/.github/demo.webp" alt="screenshot" />
+    <p><sup>Very, VERY early WIP, btw</sup></p>
+</div>
 
-## Running unit tests
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+<!-- TechStack -->
+## :space_invader: Tech Stack
 
-```bash
-ng test
-```
+- [Angular 19](https://v19.angular.dev/)
+- [Tailwind](https://tailwindcss.com/)
 
-## Running end-to-end tests
 
-For end-to-end (e2e) testing, run:
+<!-- Roadmap -->
+## :compass: Roadmap
 
-```bash
-ng e2e
-```
+* [x] Browse timeline, notification, profile and search feeds
+* [x] User interactions
+* [x] Customizable columns
+* [x] Column filters
+* [ ] Internationalization (multi-language)
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+For more info, [check the project issues page on Tangled.sh](https://tangled.sh/@dragon.gal/consolesky/issues)
 
-## Additional Resources
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+<!-- License -->
+## :warning: License
+
+owo what's that? haha idk (I started this for fun)
+
+
+<!-- Acknowledgments -->
+## :gem: Acknowledgements
+
+- [Skeetdeck](https://github.com/mary-ext/skeetdeck) (Easily the best Bsky 3rd party client and an invaluable source of ideas about how to implement some stuff!)
+- [Awesome README](https://github.com/matiassingers/awesome-readme)
