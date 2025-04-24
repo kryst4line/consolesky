@@ -11,10 +11,10 @@ import {
 } from "@atproto/api";
 import {from, Subject} from "rxjs";
 import {EmbedType, ExternalEmbed, ImageEmbed, VideoEmbed} from "@models/embed";
-import {DOC_ORIENTATION, NgxImageCompressService} from "ngx-image-compress";
 import {HttpErrorResponse} from "@angular/common/http";
 import {PostCompose} from '@models/post-compose';
 import {agent} from '@core/bsky.api';
+import imageCompression from 'browser-image-compression';
 
 export const posts: Map<string, WritableSignal<AppBskyFeedDefs.PostView>> =
   new Map<string, WritableSignal<AppBskyFeedDefs.PostView>>();
@@ -25,10 +25,6 @@ export const posts: Map<string, WritableSignal<AppBskyFeedDefs.PostView>> =
 export class PostService {
   public postCompose: WritableSignal<PostCompose> = signal(undefined);
   public refreshFeeds: Subject<void> = new Subject<void>();
-
-  constructor(
-    private imageCompressService: NgxImageCompressService
-  ) {}
 
   setPost(post: AppBskyFeedDefs.PostView): WritableSignal<AppBskyFeedDefs.PostView> {
     const existingPost = posts.get(post.uri);
@@ -300,7 +296,7 @@ export class PostService {
             const reader = new FileReader();
             reader.onload = (event: any) => {
               const newEmbed = new ImageEmbed();
-              newEmbed.images = [...imageEmbed().images, {data: event.srcElement.result, alt: ''}];
+              newEmbed.images = [...imageEmbed().images, {file: file, data: event.srcElement.result, alt: ''}];
               imageEmbed.set(newEmbed);
             };
             reader.readAsDataURL(file);
@@ -391,30 +387,26 @@ export class PostService {
 
         from(Promise.all(
           imageEmbed().images.map(i => {
-            return this.imageCompressService.compressFile(i.data, DOC_ORIENTATION.Default, undefined, undefined, 2000, 2000);
+            return imageCompression(i.file, {
+              maxSizeMB: 1,
+              maxWidthOrHeight: 2000
+            });
           })
         )).subscribe({
-          next: images64 => {
+          next: blobs => {
             from(
-              Promise.all(images64.map(image => fetch(image).then(res => res.blob())))
+              Promise.all(blobs.map(b => agent.uploadBlob(b)))
             ).subscribe({
-              next: blobs => {
-                from(
-                  Promise.all(blobs.map(b => agent.uploadBlob(b)))
-                ).subscribe({
-                  next: upload => {
-                    resolve({
-                      $type: 'app.bsky.embed.images',
-                      images: upload.map(response => {
-                        return {
-                          alt: '',
-                          image: response.data.blob
-                        }
-                      })
-                    } as $Typed<AppBskyEmbedImages.Main>);
-                  },
-                  error: err => reject(err)
-                })
+              next: upload => {
+                resolve({
+                  $type: 'app.bsky.embed.images',
+                  images: upload.map(response => {
+                    return {
+                      alt: '',
+                      image: response.data.blob
+                    }
+                  })
+                } as $Typed<AppBskyEmbedImages.Main>);
               },
               error: err => reject(err)
             })

@@ -22,7 +22,7 @@ interface Embed {
 export class ImageEmbed implements Embed {
   type: EmbedType.IMAGE = EmbedType.IMAGE;
   /** Image array */
-  images: {data: string, alt: string}[] = [];
+  images: {file: File, data: string, alt: string}[] = [];
 }
 
 export class VideoEmbed implements Embed {
