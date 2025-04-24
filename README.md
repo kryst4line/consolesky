@@ -30,8 +30,8 @@ Follow the updates:
 ## :camera: Screenshots
 
 <div align="center">
-    <img src="https://github.com/kryst4line/metrosky/raw/refs/heads/main/.github/demo.webp" alt="screenshot" />
-    <p><sup>Very, VERY early WIP, btw</sup></p>
+    <img src="https://github.com/kryst4line/consolesky/raw/refs/heads/master/.github/screenshot.webp" alt="screenshot" />
+    <p><sup>Obviously WIP</sup></p>
 </div>
 
 
