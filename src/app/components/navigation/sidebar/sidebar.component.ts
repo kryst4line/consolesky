@@ -1,6 +1,7 @@
 import {ChangeDetectionStrategy, Component} from '@angular/core';
 import {PostService} from '@services/post.service';
 import {DialogService} from '@services/dialog.service';
+import {ColumnService} from '@services/column.service';
 
 @Component({
   selector: 'sidebar',
@@ -10,7 +11,13 @@ import {DialogService} from '@services/dialog.service';
 export class SidebarComponent {
   constructor(
     protected postService: PostService,
-    protected dialogService: DialogService
+    protected dialogService: DialogService,
+    protected columnService: ColumnService
   ) {}
 
+  scrollToColumn(index: number) {
+    document.querySelector('deck > div').children[index].scrollIntoView({
+      behavior: 'smooth'
+    });
+  }
 }

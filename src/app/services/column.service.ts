@@ -72,20 +72,21 @@ export class ColumnService {
 
   public createTimelineColumn() {
     let column = new TimelineDeckColumn();
-    column.title = 'Home';
+    column.title = 'home';
     column.index = columns().length;
     this.addColumn(column);
   }
 
   public createNotificationsColumn() {
     let column = new NotificationDeckColumn();
-    column.title = 'Notifications';
+    column.title = 'notifications';
     column.index = columns().length;
     this.addColumn(column);
   }
 
   public createAuthorColumn(author: Partial<{did: string, handle: string, displayName: string}>) {
     let column = new AuthorDeckColumn();
+    column.title = author.handle;
     column.did = author.did;
     column.handle = author.handle;
     column.displayName = author.displayName;
@@ -104,6 +105,7 @@ export class ColumnService {
 
   public createSearchColumn(query: string, sort: 'top' | 'latest') {
     let column = new SearchDeckColumn();
+    column.title = query;
     column.query = query;
     column.sort = sort;
     column.index = columns().length;
