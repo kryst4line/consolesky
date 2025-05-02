@@ -12,7 +12,6 @@ import {
 } from '@angular/core';
 import {debounceTime, from, Subject} from 'rxjs';
 import {agent} from '@core/bsky.api';
-import {MessageService} from '@services/message.service';
 import {AppBskyActorDefs, AppBskyFeedDefs} from '@atproto/api';
 import {DialogService} from '@services/dialog.service';
 import {FormsModule} from '@angular/forms';

@@ -14,10 +14,4 @@ export class SidebarComponent {
     protected dialogService: DialogService,
     protected columnService: ColumnService
   ) {}
-
-  scrollToColumn(index: number) {
-    document.querySelector('deck > div').children[index].scrollIntoView({
-      behavior: 'smooth'
-    });
-  }
 }

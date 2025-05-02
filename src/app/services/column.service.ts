@@ -47,6 +47,12 @@ export class ColumnService {
     localStorage.setItem(StorageKeys.DECK_COLUMNS, JSON.stringify(columns()));
   }
 
+  scrollToColumn(index: number) {
+    document.querySelector('deck > div').children[index].scrollIntoView({
+      behavior: 'smooth'
+    });
+  }
+
   public checkColumns() {
     let storageColumns: Partial<DeckColumn>[] = JSON.parse(localStorage.getItem(StorageKeys.DECK_COLUMNS));
 

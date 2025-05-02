@@ -21,6 +21,7 @@ import {AuthorFeedComponent} from '@components/feeds/author-feed/author-feed.com
 import {ScrollDirective} from '@shared/directives/scroll.directive';
 import {DialogService} from '@services/dialog.service';
 import {ButtonFollowComponent} from '@components/shared/button-follow/button-follow.component';
+import {ColumnService} from '@services/column.service';
 
 @Component({
   selector: 'author-view',
@@ -57,6 +58,7 @@ export class AuthorViewComponent implements OnInit {
   constructor(
     private messageService: MessageService,
     protected dialogService: DialogService,
+    private columnService: ColumnService,
     private cdRef: ChangeDetectorRef
   ) {}
 
@@ -76,5 +78,13 @@ export class AuthorViewComponent implements OnInit {
       top: this.selector().nativeElement.offsetTop
     });
     this.filter.set(filter);
+  }
+
+  addColumn() {
+    this.columnService.createAuthorColumn(this.author());
+    setTimeout(
+      () => this.columnService.scrollToColumn(this.columnService.getColumns()().length - 1)
+      , 50
+    );
   }
 }

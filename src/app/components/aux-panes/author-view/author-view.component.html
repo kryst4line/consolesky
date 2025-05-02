@@ -26,8 +26,17 @@
       </div>
 
       <div
-        class="flex w-full h-8 mt-2 px-3 justify-end"
+        class="flex w-full h-8 mt-2 px-3 justify-end gap-2"
       >
+        <button
+          (click)="addColumn()"
+          title="Add as column"
+          class="btn-secondary p-0 h-full w-8 flex items-center"
+        >
+          <span
+            class="material-icons !text-2xl h-7.5 w-8"
+          >add</span>
+        </button>
 
         <button-follow
           [author]="author()"

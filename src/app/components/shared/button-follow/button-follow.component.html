@@ -2,6 +2,7 @@
   @if (author().viewer?.following) {
     <button
       (click)="onUnfollow.emit()"
+      title="Unfollow"
       class="btn-primary h-8 w-8 p-0 flex items-center justify-center font-bold"
     >
       <span
@@ -11,6 +12,7 @@
   } @else {
     <button
       (click)="onFollow.emit()"
+      title="Follow"
       class="btn-secondary h-8 w-8 p-0 flex items-center justify-center font-bold"
     >
       <span
@@ -28,12 +30,14 @@
   } @else if (author().viewer?.following) {
     <button
       (click)="onUnfollow.emit()"
+      title="Unfollow"
       class="btn-primary py-0 h-full font-bold"
     >following
     </button>
   } @else {
     <button
       (click)="onFollow.emit()"
+      title="Follow"
       class="btn-secondary py-0 h-full font-bold"
     >follow
     </button>

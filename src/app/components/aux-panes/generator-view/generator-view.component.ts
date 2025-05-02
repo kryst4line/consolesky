@@ -1,11 +1,4 @@
-import {
-  ChangeDetectionStrategy,
-  Component,
-  ElementRef,
-  input,
-  signal,
-  viewChild
-} from '@angular/core';
+import {ChangeDetectionStrategy, Component, ElementRef, input, signal, viewChild} from '@angular/core';
 import {AppBskyFeedDefs} from '@atproto/api';
 import {AvatarComponent} from '@components/shared/avatar/avatar.component';
 import {RichTextComponent} from '@components/shared/rich-text/rich-text.component';
