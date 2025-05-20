@@ -96,7 +96,7 @@ export class AuthorFeedComponent implements OnInit, OnDestroy {
     from(agent.getAuthorFeed({
       actor: this.did(),
       filter: this.filter(),
-      limit: 25
+      limit: 15
     })).subscribe({
       next: response => {
         this.feed().nativeElement.scrollTo({top:0});
@@ -119,7 +119,7 @@ export class AuthorFeedComponent implements OnInit, OnDestroy {
       actor: this.did(),
       filter: this.filter(),
       cursor: this.cursor,
-      limit: 25
+      limit: 15
     })).subscribe({
       next: response => {
         this.cursor = response.data.cursor;

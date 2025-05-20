@@ -85,7 +85,7 @@ export class SearchFeedComponent implements OnInit, OnDestroy {
     from(agent.app.bsky.feed.searchPosts({
       q: this.query(),
       sort: this.sort(),
-      limit: 25
+      limit: 15
     })).subscribe({
       next: response => {
         this.feed().nativeElement.scrollTo({top:0});
@@ -108,7 +108,7 @@ export class SearchFeedComponent implements OnInit, OnDestroy {
       q: this.query(),
       sort: this.sort(),
       cursor: this.cursor,
-      limit: 25
+      limit: 15
     })).subscribe({
       next: response => {
         this.cursor = response.data.cursor;

@@ -85,7 +85,7 @@ export class TimelineFeedComponent implements OnInit, OnDestroy {
   initData() {
     this.loading = true;
     from(agent.getTimeline({
-      limit: 50
+      limit: 15
     })).subscribe({
       next: response => {
         this.feed().nativeElement.scrollTo({top:0});
@@ -106,7 +106,7 @@ export class TimelineFeedComponent implements OnInit, OnDestroy {
 
     from(agent.getTimeline({
       cursor: this.cursor,
-      limit: 50
+      limit: 20
     })).subscribe({
       next: response => {
         this.cursor = response.data.cursor;
