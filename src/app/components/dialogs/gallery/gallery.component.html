@@ -6,7 +6,7 @@
     (click)="$event.stopPropagation()"
     [href]="images[index].fullsize"
     target="_blank"
-    class="relative w-auto h-auto max-w-[calc(100%_-_10rem)] max-h-[calc(100%_-_4rem)] outline-none pointer-events-auto cursor-pointer"
+    class="relative w-auto h-auto max-w-[calc(100%_-_10rem)] max-h-[calc(100%_-_4rem)] min-h-0 outline-none pointer-events-auto cursor-pointer"
   >
     <img
       [src]="images[index].fullsize"
