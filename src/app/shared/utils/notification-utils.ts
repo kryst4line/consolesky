@@ -18,20 +18,19 @@ export default class NotificationUtils {
           target.push(temp);
           notifications.shift();
         } else if (notifications[0].reason) {
-          const slice = notifications.filter(n =>
-            (n.reasonSubject === notifications[0].reasonSubject && n.reason === notifications[0].reason)
-          );
-
-          temp.authors = slice.map(s => s.author);
+          temp.authors = [notifications[0].author];
           temp.reason = notifications[0].reason;
           temp.notification = notifications[0];
           temp.uri = notifications[0].reasonSubject;
 
-          target.push(temp);
+          notifications.shift();
 
-          notifications = notifications.filter(n =>
-            !(n.reasonSubject === notifications[0].reasonSubject && n.reason === notifications[0].reason)
-          );
+          while (notifications[0]?.reason && notifications[0].reasonSubject == temp.notification.reasonSubject && notifications[0].reason == temp.notification.reason) {
+            temp.authors.push(notifications[0].author);
+            notifications.shift();
+          }
+
+          target.push(temp);
         }
       }
 
