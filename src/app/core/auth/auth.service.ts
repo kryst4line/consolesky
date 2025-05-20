@@ -27,18 +27,20 @@ export class AuthService {
   checkToken() {
     const sessionData = this.storageService.get(StorageKeys.TOKEN_KEY);
     if (sessionData) {
-      agent.resumeSession(JSON.parse(sessionData)).then(
-        () => {
-          this.storageService.set(StorageKeys.TOKEN_KEY, JSON.stringify(agent.session));
+      agent.sessionManager.refreshSession().then(() => {
+        agent.resumeSession(JSON.parse(sessionData)).then(
+          () => {
+            this.storageService.set(StorageKeys.TOKEN_KEY, JSON.stringify(agent.session));
 
-          agent.getProfile({actor: agent.session.did}).then(response => {
-            this.loggedUser.set(response.data);
-            this.columnService.checkColumns();
+            agent.getProfile({actor: agent.session.did}).then(response => {
+              this.loggedUser.set(response.data);
+              this.columnService.checkColumns();
 
-            this.authenticationState.next(true);
-          });
-        }
-      );
+              this.authenticationState.next(true);
+            });
+          }
+        );
+      })
     }
   }
 
