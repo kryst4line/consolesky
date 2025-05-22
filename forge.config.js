@@ -24,6 +24,14 @@ module.exports = {
     //   config: {},
     // },
   ],
+  hooks: {
+    postPackage: async (forgeConfig, options) => {
+      console.info('Packages built at:', options.outputPaths);
+    },
+    postMake: async (forgeConfig, options) => {
+      console.info('Packages built at:', options.outputPaths);
+    }
+  },
   plugins: [
     {
       name: '@electron-forge/plugin-auto-unpack-natives',

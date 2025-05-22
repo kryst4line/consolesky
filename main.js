@@ -6,11 +6,17 @@ let mainWindow
 
 function createWindow () {
   mainWindow = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1440,
+    height: 800,
     webPreferences: {
       nodeIntegration: true
-    }
+    },
+    frame: false,
+    titleBarStyle: 'hidden',
+    ...(process.platform !== 'darwin' ? { titleBarOverlay: {
+      color: 'white',
+        height: 21
+      } } : {})
   })
 
   mainWindow.loadURL(
@@ -21,7 +27,7 @@ function createWindow () {
     })
   );
   // Open the DevTools.
-  mainWindow.webContents.openDevTools()
+  // mainWindow.webContents.openDevTools()
 
   mainWindow.on('closed', function () {
     mainWindow = null

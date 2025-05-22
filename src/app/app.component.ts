@@ -10,6 +10,7 @@ import {takeWhile} from 'rxjs';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
+  isElectron = false;
   constructor(
     private authService: AuthService,
     private router: Router
@@ -18,6 +19,7 @@ export class AppComponent {
   }
 
   initApp() {
+    this.isElectron = navigator.userAgent.toLowerCase().indexOf(' electron/') > -1;
     this.authService.authenticationState.pipe(takeWhile(res => !res, true)).subscribe(state => {
       if (state) {
         this.router.navigate(['']);

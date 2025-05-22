@@ -1,3 +1,12 @@
-<div class="app-container">
+@if (isElectron) {
+  <div
+    class="block w-full h-6"
+    style="app-region: drag"
+  ></div>
+}
+<div
+  class="app-container"
+  [style]="isElectron ? 'height: calc(100% - 1.5rem)' : undefined"
+>
   <router-outlet></router-outlet>
 </div>
